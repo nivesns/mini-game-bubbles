@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
+      <title>PopyGame</title>
+   </head>
+   <body>
+      <canvas id="canvas" width="400" height="350" style=" border:#000 1px solid;"></canvas>
+   </body>
+   <script type="text/javascript" src="Box2dWeb-2.1.a.3.js"></script>
+   <script type="text/javascript">
+
+       /*var    b2Vec2 = Box2D.Common.Math.b2Vec2
+            ,	b2BodyDef = Box2D.Dynamics.b2BodyDef
+            ,	b2Body = Box2D.Dynamics.b2Body
+            ,	b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+            ,	b2World = Box2D.Dynamics.b2World
+            ,	b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+            ,	b2DebugDraw = Box2D.Dynamics.b2DebugDraw;*/
+          var b2CircleShape = Box2D.Collision.Shapes.b2CircleShape,
+      b2EdgeChainDef = Box2D.Collision.Shapes.b2EdgeChainDef,
+      b2EdgeShape = Box2D.Collision.Shapes.b2EdgeShape,
+      b2MassData = Box2D.Collision.Shapes.b2MassData,
+      b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape,
+      b2Shape = Box2D.Collision.Shapes.b2Shape,
+      b2CircleContact = Box2D.Dynamics.Contacts.b2CircleContact,
+      b2Contact = Box2D.Dynamics.Contacts.b2Contact,
+      b2ContactConstraint = Box2D.Dynamics.Contacts.b2ContactConstraint,
+      b2ContactConstraintPoint = Box2D.Dynamics.Contacts.b2ContactConstraintPoint,
+      b2ContactEdge = Box2D.Dynamics.Contacts.b2ContactEdge,
+      b2ContactFactory = Box2D.Dynamics.Contacts.b2ContactFactory,
+      b2ContactRegister = Box2D.Dynamics.Contacts.b2ContactRegister,
+      b2ContactResult = Box2D.Dynamics.Contacts.b2ContactResult,
+      b2ContactSolver = Box2D.Dynamics.Contacts.b2ContactSolver,
+      b2EdgeAndCircleContact = Box2D.Dynamics.Contacts.b2EdgeAndCircleContact,
+      b2NullContact = Box2D.Dynamics.Contacts.b2NullContact,
+      b2PolyAndCircleContact = Box2D.Dynamics.Contacts.b2PolyAndCircleContact,
+      b2PolyAndEdgeContact = Box2D.Dynamics.Contacts.b2PolyAndEdgeContact,
+      b2PolygonContact = Box2D.Dynamics.Contacts.b2PolygonContact,
+      b2PositionSolverManifold = Box2D.Dynamics.Contacts.b2PositionSolverManifold,
+      b2Body = Box2D.Dynamics.b2Body,
+      b2BodyDef = Box2D.Dynamics.b2BodyDef,
+      b2ContactFilter = Box2D.Dynamics.b2ContactFilter,
+      b2ContactImpulse = Box2D.Dynamics.b2ContactImpulse,
+      b2ContactListener = Box2D.Dynamics.b2ContactListener,
+      b2ContactManager = Box2D.Dynamics.b2ContactManager,
+      b2DebugDraw = Box2D.Dynamics.b2DebugDraw,
+      b2DestructionListener = Box2D.Dynamics.b2DestructionListener,
+      b2FilterData = Box2D.Dynamics.b2FilterData,
+      b2Fixture = Box2D.Dynamics.b2Fixture,
+      b2FixtureDef = Box2D.Dynamics.b2FixtureDef,
+      b2Island = Box2D.Dynamics.b2Island,
+      b2TimeStep = Box2D.Dynamics.b2TimeStep,
+      b2World = Box2D.Dynamics.b2World,
+      b2Color = Box2D.Common.b2Color,
+      b2internal = Box2D.Common.b2internal,
+      b2Settings = Box2D.Common.b2Settings,
+      b2Mat22 = Box2D.Common.Math.b2Mat22,
+      b2Mat33 = Box2D.Common.Math.b2Mat33,
+      b2Math = Box2D.Common.Math.b2Math,
+      b2Sweep = Box2D.Common.Math.b2Sweep,
+      b2Transform = Box2D.Common.Math.b2Transform,
+      b2Vec2 = Box2D.Common.Math.b2Vec2,
+      b2Vec3 = Box2D.Common.Math.b2Vec3,
+      b2AABB = Box2D.Collision.b2AABB,
+      b2Bound = Box2D.Collision.b2Bound,
+      b2BoundValues = Box2D.Collision.b2BoundValues,
+      b2Collision = Box2D.Collision.b2Collision,
+      b2ContactID = Box2D.Collision.b2ContactID,
+      b2ContactPoint = Box2D.Collision.b2ContactPoint,
+      b2Distance = Box2D.Collision.b2Distance,
+      b2DistanceInput = Box2D.Collision.b2DistanceInput,
+      b2DistanceOutput = Box2D.Collision.b2DistanceOutput,
+      b2DistanceProxy = Box2D.Collision.b2DistanceProxy,
+      b2DynamicTree = Box2D.Collision.b2DynamicTree,
+      b2DynamicTreeBroadPhase = Box2D.Collision.b2DynamicTreeBroadPhase,
+      b2DynamicTreeNode = Box2D.Collision.b2DynamicTreeNode,
+      b2DynamicTreePair = Box2D.Collision.b2DynamicTreePair,
+      b2Manifold = Box2D.Collision.b2Manifold,
+      b2ManifoldPoint = Box2D.Collision.b2ManifoldPoint,
+      b2Point = Box2D.Collision.b2Point,
+      b2RayCastInput = Box2D.Collision.b2RayCastInput,
+      b2RayCastOutput = Box2D.Collision.b2RayCastOutput,
+      b2Segment = Box2D.Collision.b2Segment,
+      b2SeparationFunction = Box2D.Collision.b2SeparationFunction,
+      b2Simplex = Box2D.Collision.b2Simplex,
+      b2SimplexCache = Box2D.Collision.b2SimplexCache,
+      b2SimplexVertex = Box2D.Collision.b2SimplexVertex,
+      b2TimeOfImpact = Box2D.Collision.b2TimeOfImpact,
+      b2TOIInput = Box2D.Collision.b2TOIInput,
+      b2WorldManifold = Box2D.Collision.b2WorldManifold,
+      ClipVertex = Box2D.Collision.ClipVertex,
+      Features = Box2D.Collision.Features,
+      IBroadPhase = Box2D.Collision.IBroadPhase;
+
+         //创世
+         var world = new b2World(new b2Vec2(0, 10), true);
+
+         //造盒
+         var bodyDef = new b2BodyDef;
+         bodyDef.type = b2Body.b2_dynamicBody;
+         bodyDef.position.Set(2, 2);
+         var fixDef = new b2FixtureDef;
+         fixDef.density = 10.0;
+         fixDef.friction = 0.5;
+         fixDef.restitution =1;
+
+         fixDef.shape = new b2PolygonShape;
+         fixDef.shape.SetAsBox(1, 1);
+
+         var happyBox = world.CreateBody(bodyDef)
+         happyBox.CreateFixture(fixDef);
+
+         //造Holder
+         var holderDef = new b2BodyDef;
+         holderDef.type = b2Body.b2_staticBody;
+         holderDef.position.Set(2, 10);
+
+         var holder = world.CreateBody(holderDef)
+         holder.CreateFixture(fixDef);
+         
+         var v0 = new b2Vec2(2, 4);
+		 var v1 = new b2Vec2(4, 2);
+		 var v2 = new b2Vec2(6, 4);
+		 var v3 = new b2Vec2(7, 8);
+		 var edge = new b2EdgeShape(v1,v2);
+		//edge.Set(v1, v2);
+		 edge.m_hasVertex0 = true;
+		 edge.m_hasVertex3 = true;
+         edge.m_vertex0 = v0;
+		 edge.m_vertex3 = v3;
+		var edgeDef = new b2BodyDef;
+         edgeDef.type = b2Body.b2_dynamicBody;
+         edgeDef.position.Set(3, 6);
+         var edger = world.CreateBody(edgeDef);
+		 var fixDef2 = new b2FixtureDef;
+         fixDef2.density = 10.0;
+         fixDef2.friction = 0.5;
+         fixDef2.restitution =1;
+
+		 fixDef2.shape = edge;
+		 //fixDef2.shape.SetAsBox(15, 2);
+		// alert(fixDef2.shape.m_hasVertex0);
+        // edger.CreateFixture(fixDef2);
+		
+         //设DebugDraw
+         var debugDraw = new b2DebugDraw();
+	     debugDraw.SetSprite( document.getElementById ("canvas").getContext("2d") );
+	     debugDraw.SetDrawScale(30.0);
+	     debugDraw.SetFillAlpha(0.5);
+	     debugDraw.SetLineThickness(1.0);
+	     debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+         world.SetDebugDraw(debugDraw);
+
+         window.setInterval(update, 1000 / 60);
+
+         //update
+         function update() {
+            world.Step(1 / 60, 10, 10);
+            world.DrawDebugData();
+            world.ClearForces();
+         };
+    </script>
+
+</html>

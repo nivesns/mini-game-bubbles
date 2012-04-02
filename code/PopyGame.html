@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html />
+<html xmlns="http://www.w3.org/1999/xhtml">
+	  <head>
+	  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	  <title>拯救泡泡</title>
+	  <script type="text/javascript" src="jquery-1.7.2.js"></script>
+	  <!--<script src="protoclass.js"></script> -->
+	  <script  type="text/javascript" src="Box2dWeb-2.1.a.3.js"></script>     
+	  <script type="text/javascript" >
+	  	
+	  	//var aabb = new b2AABB();
+		//aabb.IsValid();
+	  	var World,Body1,Body2;
+			var canvas, context;
+			var canvasWidth,canvasHeight,canvasTop,canvasLeft;
+	  	function init(){
+	  		canvas = document.getElementById("canvas");
+			canvasWidth = parseInt(canvas.width);
+    canvasHeight = parseInt(canvas.height);
+    canvasTop = parseInt(canvas.offsetTop);
+    canvasLeft = parseInt(canvas.offsetLeft);
+    		context = canvas.getContext("2d");
+    		//alert(canvas.width);
+			box2dMain();  
+
+	  	}
+	  	//初始化box2d
+function box2dMain() {
+    setupWorld();				//1. 创建一个世界
+    addBodys();					//2. 为世界创建物体
+    setInterval(step, 1000/60);	//3. 让世界动起来
+
+}
+	  	//setupWorld()
+function setupWorld(){
+
+    //1. 设置有效区域大小 - b2AABB 类 （左上角向量,右下角向量）
+	Box2D.Collision.b2AABB()
+    var worldAABB = new Box2D.Collision.b2AABB();
+	
+  //  worldAABB.minVertex(-1000, -1000);	//左上角
+    //worldAABB.maxVertex(1000, 1000); 	//右下角
+
+    //2. 定义重力 - 2D向量 - b2Vec2 类 （x,y）
+    gravity = new Box2D.Common.Math.b2Vec2(0, 300);
+
+    //3. 忽略休眠的物体
+    var doSleep = true;
+
+    //4. 创建世界 - b2World
+    World = new Box2D.Dynamics.b2World(worldAABB, gravity, doSleep);
+	var debugDraw = new Box2D.Dynamics.b2DebugDraw();
+	debugDraw.SetSprite(context);
+	World.SetDebugDraw(debugDraw);
+}
+
+//addBodys()
+function addBodys(){
+	 a = new Box2D.Dynamics.b2ContactListener();
+    //1. 定义形状	b2CircleDef,b2BoxDef,b2PolyDef 类
+	var Shape1 = new Box2D.Collision.Shapes.b2CircleShape();	//Shape1:圆形
+	
+	Shape1.radius = 20;					//半径
+	Shape1.SetLocalPosition(new Box2D.Common.Math.b2Vec2(0, 0));
+	//Shape1.localPosition.Set(0, 0);		//偏移量
+    Shape1.density = 1.0;				//密度
+    Shape1.restitution = .3;			//弹性
+    Shape1.friction = 1;				//摩擦力
+        
+	var Shape2 = new Box2D.Collision.Shapes.b2PolygonShape();	//Shape2:多边形
+	
+	Shape2.vertexCount = 3;						//顶点数为5
+	Shape2.m_vertices[0] = new Box2D.Common.Math.b2Vec2(0,-20);		//顶点1
+	Shape2.m_vertices[1] = new Box2D.Common.Math.b2Vec2(23.10,20);	//顶点2
+	Shape2.m_vertices[2] = new Box2D.Common.Math.b2Vec2(-23.10,20);	//顶点3
+	//Shape2.SetLocalPosition(new Box2D.Common.Math.b2Vec2(0, 30));
+	//Shape2.localPosition.Set(0, 30);	//偏移量
+    Shape2.density = 1.0;				//密度
+    Shape2.restitution = .3;			//弹性
+    Shape2.friction = 1;				//摩擦力
+
+	//2. 定义物体	b2BodyDef 类
+    var BodyDef1 = new Box2D.Dynamics.b2BodyDef();
+    BodyDef1.isBullet = true;
+    BodyDef1.position.Set(100, 100);	//设置物体的初始位置
+  //  BodyDef1.AddShape(Shape1);			//物体中加入Shape1
+   // BodyDef1.AddShape(Shape2);			//物体中加入Shape2
+	//3. 将物体添加至world
+    Body = World.CreateBody(BodyDef1);	//在世界中创建物体	
+	
+	var fixtureDef1 = new Box2D.Dynamics.b2FixtureDef();
+	fixtureDef1.shape = Shape1;
+	fixtureDef1.userData = 2;
+	fixtureDef1.density = 1.0;
+	
+	fixture1 = Body.CreateFixture(fixtureDef1);	
+	fixture1.m_shape = Shape1;
+	//alert(fixture1.m_shape);
+	//fixture1.SetUserData(1);	
+	var fixtureDef2 = new Box2D.Dynamics.b2FixtureDef();
+	fixtureDef2.shape = Shape2;
+	fixtureDef2.density = 1.0;
+	//fixture2 = Body.CreateFixture(fixtureDef2);
+
+	//...可用同样流程继续添加物体，再定义一块地板
+	/*var Shape3 = new b2BoxDef();	//Shape3:矩形
+	
+    Shape3.extents.Set(200, 5);			//定义矩形高、宽
+    Shape2.density = 0;					//墙体密度为0
+    Shape2.restitution = .3;			//弹性
+    Shape2.friction = 1;				//摩擦力
+	var BodyDef2 = new b2BodyDef();
+		
+    BodyDef2.position.Set(220, 500);	//设置物体的初始位置
+    BodyDef2.AddShape(Shape3);			//物体中加入Shape3
+    Body2 = World.CreateBody(BodyDef2);	//在世界中创建物体*/
+}
+
+
+//计算和绘制世界的下一帧
+function step(){
+
+	var dt = 1/60;
+	//迭代次数，影响物体碰撞的计算精度，太高会导致速度过慢
+	var iterations = 10;
+
+	//计算dt秒之后世界中物体的位置
+	World.Step(dt,iterations,1);
+
+	//绘制世界
+	drawWorld();
+
+}
+
+//绘制世界
+function drawWorld(){
+	//绘制之前将上一帧的内容清除
+	context.clearRect(0, 0, canvasWidth, canvasHeight);
+	/*
+		 for (var b = this.m_bodyList; b; b = b.m_next) {
+         for (var f = b.m_fixtureList; f; f = f.m_next) {
+            f.m_proxy = broadPhase.CreateProxy(oldBroadPhase.GetFatAABB(f.m_proxy), f);
+         }
+      }
+	*/
+	var color = new Box2D.Common.b2Color(0.9, 0.7, 0.7);
+	//遍历世界中的物体
+    for (var b = World.m_bodyList; b; b = b.m_next) {
+		xf = b.m_xf;
+		for (var f = b.m_fixtureList; f; f = f.m_next) {
+			s = f.GetShape();
+			if (b.IsActive() == false) {
+                  color.Set(0.5, 0.5, 0.3);
+                  World.DrawShape(s, xf, color);
+               }
+               else if (b.GetType() == Box2D.Dynamics.b2Body.b2_staticBody) {
+                  color.Set(0.5, 0.9, 0.5);
+                  World.DrawShape(s, xf, color);
+               }
+               else if (b.GetType() == Box2D.Dynamics.b2Body.b2_kinematicBody) {
+                  color.Set(0.5, 0.5, 0.9);
+                  World.DrawShape(s, xf, color);
+               }
+               else if (b.IsAwake() == false) {
+                  color.Set(0.6, 0.6, 0.6);
+                  World.DrawShape(s, xf, color);
+               }
+               else {
+                  color.Set(0.9, 0.7, 0.7);
+                  World.DrawShape(s, xf, color);
+               }
+			//alert(f.m_shape.radius);
+         // World.DrawShape(s,xf,color);
+         }
+		//遍历物体中的形状
+       // for (var s = b.GetShapeList(); s != null; s = s.GetNext()) {
+       //     this.drawShape(s);	//绘制一个形状
+       // }
+    }
+}
+
+//绘制一个形状
+function drawShape(shape){
+    context.strokeStyle = '#f00';		//线形
+    context.beginPath();
+    switch (shape.m_type) {
+        case Box2D.Collision.Shapes.b2Shape.e_circleShape:{	//如果是圆形，画圆
+            var circle = shape;
+            var r = circle.m_radius;
+            var pos = circle.m_position;
+            var pos2 = circle.m_R.col1.clone().scale(r).add(pos);
+            context.arc(pos.x, pos.y, r, 0, Math.PI * 2, false);
+            context.moveTo(pos.x, pos.y);
+            context.lineTo(pos2.x, pos2.y);
+            break;
+        }
+        case Box2D.Collision.Shapes.b2Shape.e_polyShape:{		//如果是多边形，画多边形
+            var poly = shape;
+            var tV = b2Math.AddVV(poly.m_position, b2Math.b2MulMV(poly.m_R, poly.m_vertices[0]));
+            context.moveTo(tV.x, tV.y);
+            for (var i = 0; i < poly.m_vertexCount; i++) {
+                var v = b2Math.AddVV(poly.m_position, b2Math.b2MulMV(poly.m_R, poly.m_vertices[i]));
+                context.lineTo(v.x, v.y);
+            }
+            context.lineTo(tV.x, tV.y);
+            break;
+        }
+    }
+    context.stroke();	//绘制
+}
+	$(document).ready(function(){
+  		init();
+	}); 
+	  </script>
+	  </head>
+	  <body>
+      <canvas id="canvas" width='800' height='600' style=" border:#000 1px solid;"></canvas>
+</body>
+</html>
