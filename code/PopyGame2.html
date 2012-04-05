@@ -1,14 +1,17 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml">
-   <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
-      <title>PopyGame</title>
-   </head>
-   <body>
-      <canvas id="canvas" width="400" height="350" style=" border:#000 1px solid;"></canvas>
-   </body>
-   <script type="text/javascript" src="Box2dWeb-2.1.a.3.js"></script>
-   <script type="text/javascript">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
+<title>PopyGame</title>
+</head>
+<body>
+<center>
+  <canvas id="canvas" width="640" height="480" style=" border:#000 1px solid;"></canvas>
+  <canvas id="canvas2" width="64" height="48" style=" border:#000 1px solid;"></canvas>
+</center>
+</body>
+<script type="text/javascript" src="Box2dWeb-2.1.a.3.js"></script>
+<script type="text/javascript">
 
        /*var    b2Vec2 = Box2D.Common.Math.b2Vec2
             ,	b2BodyDef = Box2D.Dynamics.b2BodyDef
@@ -17,7 +20,7 @@
             ,	b2World = Box2D.Dynamics.b2World
             ,	b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
             ,	b2DebugDraw = Box2D.Dynamics.b2DebugDraw;*/
-          var b2CircleShape = Box2D.Collision.Shapes.b2CircleShape,
+      var b2CircleShape = Box2D.Collision.Shapes.b2CircleShape,
       b2EdgeChainDef = Box2D.Collision.Shapes.b2EdgeChainDef,
       b2EdgeShape = Box2D.Collision.Shapes.b2EdgeShape,
       b2MassData = Box2D.Collision.Shapes.b2MassData,
@@ -92,6 +95,50 @@
       ClipVertex = Box2D.Collision.ClipVertex,
       Features = Box2D.Collision.Features,
       IBroadPhase = Box2D.Collision.IBroadPhase;
+	  function push1() {
+         popy.ApplyForce(new b2Vec2(50,0), car.GetWorldCenter());
+	  }
+	  function hit() {
+         popy.ApplyImpulse(new b2Vec2(50,0), car.GetWorldCenter())
+	  }
+	  function speed() {
+         popy.SetLinearVelocity(new b2Vec2(50,0))
+	  }
+	  function teleport() {
+         popy.SetPositionAndAngle(new b2Vec2(5,0),0);
+	  }
+	  
+	function swtkeyboard(e){
+         var evtobj=window.event? event : e //distinguish between IE's explicit event object (window.event) and Firefox's implicit.
+         var unicode=evtobj.charCode? evtobj.charCode : evtobj.keyCode
+         var actualkey=String.fromCharCode(unicode)
+         if (actualkey=="f")
+             push1();
+         if (actualkey=="i")
+             hit();
+         if (actualkey=="v")
+             speed();
+         if (actualkey=="t")
+             teleport();
+	}
+	  
+	  function createCurveShape(b2Vec2Array,bodyObj){
+		//获得第一个坐标点和最后一个坐标点的x值
+		//var firstX = vetices[0].  
+		for (var i = 0; i < b2Vec2Array.length; ++i){
+			
+		}
+	  }
+	  
+	  function genVec2Array(){
+		var vec2Array = new Array();
+		for (var i = 0; i < 98; i++){
+			var x = 0.1 * i;
+			var y = -0.05 * i;
+			vec2Array.push(new b2Vec2(x,y));
+		}
+		return vec2Array;
+	  }
 
          //创世
          var world = new b2World(new b2Vec2(0, 10), true);
@@ -99,26 +146,60 @@
          //造盒
          var bodyDef = new b2BodyDef;
          bodyDef.type = b2Body.b2_dynamicBody;
-         bodyDef.position.Set(2, 2);
+         bodyDef.position.Set(1, 2);
          var fixDef = new b2FixtureDef;
          fixDef.density = 10.0;
          fixDef.friction = 0.5;
-         fixDef.restitution =1;
+         fixDef.restitution =-1;
 
-         fixDef.shape = new b2PolygonShape;
-         fixDef.shape.SetAsBox(1, 1);
+     //    fixDef.shape = new b2PolygonShape;
+    //     fixDef.shape.SetAsBox(1, 1);
+		 fixDef.shape = new b2CircleShape(0.9);
+		 //fixDef.shape.SetLocalPosition( new b2Vec2(0 ,0));  
 
-         var happyBox = world.CreateBody(bodyDef)
-         happyBox.CreateFixture(fixDef);
+
+		// fixDef.shape = new b2PolygonShape;
+		// fixDef.shape.SetAsBox(0.5,0.5);
+	/*	fixDef.shape.SetAsArray([
+       new b2Vec2(0 , -2),
+       new b2Vec2(0.1, -1.8),
+       new b2Vec2(0.1, 2),
+       new b2Vec2(0, 2),
+       ]);*/
+	   
+	   var fixDef3 = new b2FixtureDef;
+       fixDef3.density = 10.0;
+        fixDef3.friction = 0.1;
+        fixDef3.restitution =0;
+		fixDef3.shape = new b2PolygonShape;
+		var aa = genVec2Array();
+		aa.push(new b2Vec2(9.7, 2));
+		aa.push(new b2Vec2(0, 2));
+		fixDef3.shape.SetAsArray([new b2Vec2(0, -12),new b2Vec2(10, -1),new b2Vec2(10, 2),new b2Vec2(0, 2)]);
+		
+		
+		var fixDef4 = new b2FixtureDef;
+       fixDef4.density = 10.0;
+        fixDef4.friction = 0.1;
+        fixDef4.restitution =0;
+		fixDef4.shape = new b2PolygonShape;
+		fixDef4.shape.SetAsArray([new b2Vec2(5, -2.5),new b2Vec2(25, -9),new b2Vec2(25, 2),new b2Vec2(0, 2)]);
+		//fixDef3.shape.SetAsArray(aa);
+		//fixDef3.shape.SetAsArray([new b2Vec2(0, -5),new b2Vec2(1.1, -1.7),new b2Vec2(2.1, -2.5),new b2Vec2(3.1, 0),new b2Vec2(4.1, -5),new b2Vec2(5.1, -1.7),new b2Vec2(6.1, -1.0),new b2Vec2(6.6, -1.0),new b2Vec2(6.6, 2),new b2Vec2(0, 2)]);
+
+
+         var popy = world.CreateBody(bodyDef);
+		 popy.SetBullet(false);
+         popy.CreateFixture(fixDef);
 
          //造Holder
          var holderDef = new b2BodyDef;
          holderDef.type = b2Body.b2_staticBody;
-         holderDef.position.Set(2, 10);
+         holderDef.position.Set(0, 14);
 
          var holder = world.CreateBody(holderDef)
-         holder.CreateFixture(fixDef);
-         
+         holder.CreateFixture(fixDef4);
+         holder.CreateFixture(fixDef3);
          var v0 = new b2Vec2(2, 4);
 		 var v1 = new b2Vec2(4, 2);
 		 var v2 = new b2Vec2(6, 4);
@@ -138,7 +219,8 @@
          fixDef2.friction = 0.5;
          fixDef2.restitution =1;
 
-		 fixDef2.shape = edge;
+		// fixDef2.shape = edge;
+		 fixDef2.shape = new b2PolygonShape;
 		 //fixDef2.shape.SetAsBox(15, 2);
 		// alert(fixDef2.shape.m_hasVertex0);
         // edger.CreateFixture(fixDef2);
@@ -159,7 +241,7 @@
             world.Step(1 / 60, 10, 10);
             world.DrawDebugData();
             world.ClearForces();
+			document.onkeypress=swtkeyboard;
          };
     </script>
-
 </html>
