@@ -1,0 +1,27 @@
+<!doctype>
+<html>
+<head>
+<title>Crop Example</title>
+<script type="text/javascript">
+window.onload = function() {
+var canvas=document.getElementById("cropNapolean");
+var context=canvas.getContext("2d");
+
+var imageObj = new Image();
+imageObj.onload = function() {
+// 绘制图像覆盖整个画布
+context.drawImage(imageObj,0,0, 640, 480);
+
+}
+imageObj.src = "002.jpg"; 
+}
+</script>
+
+</head>
+<body>
+<div>
+<p><canvas id="cropNapolean" width="640" height="480"></canvas></p>
+</div>
+</body>
+</html>
+

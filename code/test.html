@@ -1,0 +1,127 @@
+<html>
+<head>
+    <title> All Stars ! </title>
+</head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<body>
+<div style="width:640; margin:0 auto;">
+	
+    <p>
+	<div height="480" width="800">
+    	<img src="jesse/002.jpg" height="480" width="800" id="myimg"></img>
+    </div>
+    </p>
+</div>
+<textarea rows="50" cols="100" id="txtCurRecord">
+</textarea>
+<p> 按［上箭头］开始记录，［下箭头］停止记录，［空格］回放（不停按住空格，并移动鼠标就可以看到N个移动的小黑子）</p>
+<canvas height="20" width="20" id="canvas" style=" border:#000 1px solid;" ></canvas>
+<script>
+	var canvas = document.getElementById("myimg");
+	var left = canvas.offsetLeft;
+	var top = canvas.offsetTop;
+	//alert(canvas.offsetLeft);
+	/*var context=canvas.getContext("2d");
+	var imageObj = new Image();
+	imageObj.onload = function() {
+	// 绘制图像覆盖整个画布
+		context.drawImage(imageObj,0,0, 640, 480);	
+	}
+	imageObj.src = "jesse/002.jpg"; */
+	//alert(canvas.style.top + "," + canvas.style.left);
+// functional tools
+function $(id) {
+    return document.getElementById(id);
+}
+
+function observe(id, type, func) {
+    var target = $(id) || id;
+    target.addEventListener(type, func, false);
+}
+
+function stopObserve(id, type, func) {
+    var target = $(id) || id;
+    target.removeEventListener(type, func, false);
+}
+
+// mouse event tracker
+var mouseWalk = {
+    _frames : [],
+    record : function (e) {
+		//mouseWalk._frames = [];
+        mouseWalk._frames.push([e.pageX, e.pageY]);
+    },
+    clear : function () {
+        mouseWalk._frames = [];
+    },
+    slice : function (start, end) {
+        return mouseWalk._frames.slice(start, end);
+    },
+    cursor : function () {
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        ctx.beginPath();
+        ctx.arc(10, 10, 10, 0, Math.PI*2, true); 
+        ctx.closePath();
+        ctx.fill();
+        var s = canvas.style;
+        s.position = "absolute";
+        s.top = 0;
+        s.left = 0;
+        return canvas;
+    },
+	printRecord : function () {
+		var i = 0, a = mouseWalk._frames;
+		var txt = document.getElementById("txtCurRecord");
+		//txt.value = a.toString();
+		txt.value = "[";
+		for (var i = 0 ; i < a.length; i++){
+			txt.value += "[" + (a[i][0]-left)  + "," + (a[i][1]-top)  + "]" + ",";	
+		}
+		txt.value += "]";
+	},
+    animate : function () {
+        var i = 0, a = mouseWalk._frames, _cursor = new mouseWalk.cursor();
+        var step = function (sp) {
+            i = i + 1;
+            if (!a[i]) return; // 可以避免溢出
+            _cursor.style.top = a[i][1] + "px";
+            _cursor.style.left = a[i][0] + "px";
+            setTimeout(step, sp);
+        };
+        step(0);
+    },
+    control : {
+        start : function () { observe(document, "mousemove", mouseWalk.record); },
+        stop : function () { stopObserve(document, "mousemove", mouseWalk.record); },
+        suspend : function () {}
+    }
+}
+
+function beget(o) {
+    var F = function () {};
+    F.prototype = o;
+    return new F();
+}
+
+var mouse = beget(mouseWalk);
+// alert(mouse);
+// alert(mouse.animate);
+observe(document, "keydown", function (e) {
+    if (e.keyCode === 112){
+		mouse.clear();
+        mouse.control.start();
+	}
+    else if (e.keyCode === 113)
+        mouse.control.stop();
+    else if (e.keyCode === 32)
+        mouse.animate();
+	else if (e.keyCode == 80)
+		mouse.printRecord();
+    else
+        return false;
+});
+
+</script>
+</body>
+</html>
