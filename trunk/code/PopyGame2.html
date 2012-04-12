@@ -6,15 +6,15 @@
 </head>
 <body>
 <center>
-  <canvas id="canvas" width="800" height="480" style=" border:#000 1px solid;"></canvas>
+  <canvas id="canvas" width="800" height="480" style=" border:#000 1px solid; background:url(img/track.png)" ></canvas>
   <canvas id="canvas2" width="64" height="48" style=" border:#000 1px solid;"></canvas>
   <textarea rows="50" cols="100" id="txtCurRecord"></textarea>
 </center>
 </body>
 <script type="text/javascript" src="Box2dWeb-2.1.a.3.js"></script>
 <script type="text/javascript" src="jesse/myjs.js"></script>
-<script type="text/javascript" src="tannertan/collider.js"></script>
-<!--<script type="text/javascript" src="jesse/myjs.js"></script>-->
+<!--<script type="text/javascript" src="tannertan/collider.js"></script>-->
+<!--<script type="text/javascript" src="jesse/myjs.js" ></script>-->
 <script type="text/javascript">
 	var canvas = document.getElementById ("canvas");
 	var a1 = new Array();
@@ -30,14 +30,14 @@
 		txt.value = a1.join(",");
 	//alert(trackArray[0][1]/30);
 	//alert(canvas.offsetTop);
-	var context = document.getElementById ("canvas").getContext("2d") 
+/*	var context = document.getElementById ("canvas").getContext("2d") 
 			var imageObj = new Image();
 imageObj.onload = function() {
 // 绘制图像覆盖整个画布
 context.drawImage(imageObj,0,0, 640, 480);
 
 }
-imageObj.src = "jesse/002.jpg"; 
+imageObj.src = "jesse/002.jpg"; */
        /*var    b2Vec2 = Box2D.Common.Math.b2Vec2
             ,	b2BodyDef = Box2D.Dynamics.b2BodyDef
             ,	b2Body = Box2D.Dynamics.b2Body
@@ -121,16 +121,17 @@ imageObj.src = "jesse/002.jpg";
       Features = Box2D.Collision.Features,
       IBroadPhase = Box2D.Collision.IBroadPhase;
 	  function push1() {
-         popy.ApplyForce(new b2Vec2(50,0), car.GetWorldCenter());
+         popy.ApplyForce(new b2Vec2(5,5), popy.GetWorldCenter());
 	  }
 	  function hit() {
-         popy.ApplyImpulse(new b2Vec2(50,0), car.GetWorldCenter())
+         popy.ApplyImpulse(new b2Vec2(1,0), popy.GetWorldCenter())
 	  }
 	  function speed() {
-         popy.SetLinearVelocity(new b2Vec2(50,0))
+		 alert(popy.GetLinearVelocity().x + ", " + popy.GetLinearVelocity().y);
+         popy.SetLinearVelocity(new b2Vec2(-9,1))
 	  }
 	  function teleport() {
-         popy.SetPositionAndAngle(new b2Vec2(5,0),0);
+         popy.SetPositionAndAngle(new b2Vec2(5,6),1);
 	  }
 	  
 	function swtkeyboard(e){
@@ -147,13 +148,6 @@ imageObj.src = "jesse/002.jpg";
              teleport();
 	}
 	  
-	  function createCurveShape(b2Vec2Array,bodyObj){
-		//获得第一个坐标点和最后一个坐标点的x值
-		//var firstX = vetices[0].  
-		for (var i = 0; i < b2Vec2Array.length; ++i){
-			
-		}
-	  }
 	  
 	  function genVec2Array(){
 		var vec2Array = new Array();
@@ -172,16 +166,16 @@ imageObj.src = "jesse/002.jpg";
          bodyDef.type = b2Body.b2_dynamicBody;
          bodyDef.position.Set(1, 2);
          var fixDef = new b2FixtureDef;
-         fixDef.density = 2.0;
+         fixDef.density = 1.0;
          fixDef.friction = 0.5;
          fixDef.restitution = 0.2;
 
      //    fixDef.shape = new b2PolygonShape;
     //     fixDef.shape.SetAsBox(1, 1);
-		 fixDef.shape = new b2CircleShape(0.9);
+		 fixDef.shape = new b2CircleShape(0.4);
 		 //fixDef.shape.SetLocalPosition( new b2Vec2(0 ,0)); 
 		 
-		 addListen(world);//tannertan 添加监视
+		// addListen(world);//tannertan 添加监视
 		 
 		// fixDef.shape = new b2PolygonShape;
 		// fixDef.shape.SetAsBox(0.5,0.5);
@@ -265,6 +259,10 @@ imageObj.src = "jesse/002.jpg";
 	     debugDraw.SetFillAlpha(0.5);
 	     debugDraw.SetLineThickness(1.0);
 	     debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+		 b2DebugDraw.prototype.DrawSolidPolygon = function (vertices, vertexCount, color) {		 
+      		if (!vertexCount) return;
+			var s = this.m_ctx;
+   		 };
          world.SetDebugDraw(debugDraw);
 
          window.setInterval(update, 1000 / 60);
