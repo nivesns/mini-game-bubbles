@@ -12,7 +12,7 @@
 </center>
 </body>
 <script type="text/javascript" src="Box2dWeb-2.1.a.3.js"></script>
-<script type="text/javascript" src="jesse/myjs.js"></script>
+<script type="text/javascript" src="jesse/track.js"></script>
 <!--<script type="text/javascript" src="tannertan/collider.js"></script>-->
 <!--<script type="text/javascript" src="jesse/myjs.js" ></script>-->
 <script type="text/javascript">
@@ -259,10 +259,10 @@ imageObj.src = "jesse/002.jpg"; */
 	     debugDraw.SetFillAlpha(0.5);
 	     debugDraw.SetLineThickness(1.0);
 	     debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
-		 b2DebugDraw.prototype.DrawSolidPolygon = function (vertices, vertexCount, color) {		 
+		/* b2DebugDraw.prototype.DrawSolidPolygon = function (vertices, vertexCount, color) {		 
       		if (!vertexCount) return;
 			var s = this.m_ctx;
-   		 };
+   		 };*/
          world.SetDebugDraw(debugDraw);
 
          window.setInterval(update, 1000 / 60);
