@@ -6,6 +6,7 @@ function addListen(word)
 	{
 		alert(contact.GetFixtureA().GetBody().GetUserData());//可以得到被监听对象的名字
 		alert(contact.GetFixtureB().GetBody().GetUserData());
+		
 	}
 	listener.EndContact = function(contact)
 	{
