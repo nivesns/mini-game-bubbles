@@ -284,6 +284,9 @@ imageObj.src = "jesse/002.jpg"; */
 			addObjectToWorld(world,13,12,'sun',b2Body.b2_staticBody,fixDef);
 			
 			addObjectToWorld(world,15,10,'prick',b2Body.b2_staticBody,fixDef);
+			
+			addObjectToWorld(world, 1, 480/30-1,'Return' ,b2Body.b2_staticBody, fixDef);
+			
 		}
 		//////////////////////////////////添加按钮
 		{
@@ -291,62 +294,43 @@ imageObj.src = "jesse/002.jpg"; */
 			
 		}
 		/////////////////////////////////////////////////////////////鼠标消息
-		var mouseJoint ;
+	
 		canvas.onmousedown = function(ev)
-		{
-			//鼠标按下消息
-		//	alert(ev.offsetX + " "+ ev.offsetY);
-			function getBody()
-			{
-				var mousePVec2 = new b2Vec2(ev.offsetX, ev.offsetY);
-				aabb = new b2AABB();
-				aabb.lowerBound.x = ev.offsetX -0.1;
-				aabb.lowerBound.y = ev.offsetY - 0.1;
-				aabb.upperBound.x = ev.offsetX +0.1;
-				aabb.upperBound.y = ev.offsetY + 0.1;
-				var bodyball;
-				function getBodyCallBack(fixture)
-				{
-					var shape = fixture.GetShape();
-					if(fixture.GetBody().GetType() != b2Body.b2_staticBody)
-					{
-						inside = shape.TestPoint(fixture.GetBody().GetTransform(), mousePVec2);
-						if(inside)
-						{
-							bodyball = fixture.GetBody();
-							return false;
-						}
-					}
-					return true;
-				}
-				world.QueryAABB(getBodyCallBack, aabb);
-				return bodyball;
-			}
+		{	
+			MouseClickDownRollBall(ev, world, context, canvas);	
 			
-			
-			bodyball = getObjectFromWorld(world, 'RollBall');
-			var mouseJointDef = new b2MouseJointDef();
-			mouseJointDef.bodyA = world.GetGroundBody();
-			mouseJointDef.bodyB = bodyball;
-			mouseJointDef.target.Set(ev.offsetX/30, ev.offsetY/30);
-			mouseJointDef.collideConnected = true;
-			mouseJointDef.maxForce = 100000 ;//
-			mouseJoint = world.CreateJoint(mouseJointDef);
+			MouseClickDownReturn(ev, world, context, canvas);	
 		}
         canvas.onmouseup = function(ev)
-		{
-			world.DestroyJoint(mouseJoint);            
-			mouseJoint = null;
+		{	
+			MouseClickUpRollBall(ev, world, context, canvas);
 			
+			MouseClickUpReturn(ev, world, context, canvas);	
 		}
 		canvas.onmousemove = function(ev)
 		{
-			mouseJoint.SetTarget(new b2Vec2(1, ev.offsetY/30));
+			MouseMoveRollBall(ev, world, context, canvas);
 		}
 		
-	
+		////////////////////////////////////////////////////添加四周的围墙，以致求不会掉出该场景
+		{
+			
+			var wallFixtureDef = new b2FixtureDef();
+			wallFixtureDef.density = 10.0;
+            wallFixtureDef.friction = 0.1;
+            wallFixtureDef.restitution =0;
+		    wallFixtureDef.shape = new b2PolygonShape;
+			wallFixtureDef.shape.SetAsArray([new b2Vec2(0,0), new b2Vec2(0.01,0), new b2Vec2(0.01,480/30), new b2Vec2(0,480/30)]);//leftWall
+			addObjectToWorld(world,0,0,'LeftWall',b2Body.b2_staticBody, wallFixtureDef);
+			
+			wallFixtureDef.shape.SetAsArray([new b2Vec2(0,0), new b2Vec2(800/30,0), new b2Vec2(800/30,0.01), new b2Vec2(0,0.01)]);//middleWall
+			addObjectToWorld(world,0,0,'MiddleWall',b2Body.b2_staticBody, wallFixtureDef);
+			
+			wallFixtureDef.shape.SetAsArray([new b2Vec2(800/30-0.01,0), new b2Vec2(800/30,0), new b2Vec2(800/30,480/30), new b2Vec2(800/30-0.01,480/30)]);//rightWall
+			addObjectToWorld(world,0,0,'MiddleWall',b2Body.b2_staticBody, wallFixtureDef);
+		}
 		  
-         //update
+         ///////////////////////////////////////////////每一帧都要操作的函数update
          function update() {
             world.Step(1 /24, 10, 10);
             world.DrawDebugData();			
