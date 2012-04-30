@@ -7836,7 +7836,7 @@ Box2D.postDefs = [];
       b2Fixture = Box2D.Dynamics.b2Fixture,
       b2FixtureDef = Box2D.Dynamics.b2FixtureDef,
       b2Island = Box2D.Dynamics.b2Island,
-      b2TimeStep = Box2D.Dynamics.b2TimeStep,
+      b2TimeStep = Box2D.Dynamics.b2TimeStep, 
       b2World = Box2D.Dynamics.b2World;
 
    Box2D.inherit(b2DistanceJoint, Box2D.Dynamics.Joints.b2Joint);
