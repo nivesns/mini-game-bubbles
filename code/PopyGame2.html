@@ -49,6 +49,7 @@ imageObj.src = "jesse/002.jpg"; */
             ,	b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
             ,	b2DebugDraw = Box2D.Dynamics.b2DebugDraw;*/
       var b2CircleShape = Box2D.Collision.Shapes.b2CircleShape,
+	  b2JointDef = Box2D.Dynamics.Joints.b2JointDef,
       b2EdgeChainDef = Box2D.Collision.Shapes.b2EdgeChainDef,
       b2EdgeShape = Box2D.Collision.Shapes.b2EdgeShape,
       b2MassData = Box2D.Collision.Shapes.b2MassData,
@@ -122,7 +123,9 @@ imageObj.src = "jesse/002.jpg"; */
       b2WorldManifold = Box2D.Collision.b2WorldManifold,
       ClipVertex = Box2D.Collision.ClipVertex,
       Features = Box2D.Collision.Features,
+	  b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef,
       IBroadPhase = Box2D.Collision.IBroadPhase;
+	  
 	  function push1() {
          popy.ApplyForce(new b2Vec2(5,5), popy.GetWorldCenter());
 	  }
@@ -162,7 +165,9 @@ imageObj.src = "jesse/002.jpg"; */
 		return vec2Array;
 	  }
 
-		
+		//添加鼠标消息
+		 
+		 
 		
          //创世
         var world = new b2World(new b2Vec2(0, 10), true);
@@ -271,7 +276,7 @@ imageObj.src = "jesse/002.jpg"; */
    		 };*/
          world.SetDebugDraw(debugDraw);
 
-         window.setInterval(update, 1000 / 60);
+         window.setInterval(update, 100/6);
 		
 		//添加碰撞物体  
 		
@@ -280,17 +285,76 @@ imageObj.src = "jesse/002.jpg"; */
 			
 			addObjectToWorld(world,15,10,'prick',b2Body.b2_staticBody,fixDef);
 		}
-        
+		//////////////////////////////////添加按钮
+		{
+			
+			
+		}
+		/////////////////////////////////////////////////////////////鼠标消息
+		var mouseJoint ;
+		canvas.onmousedown = function(ev)
+		{
+			//鼠标按下消息
+		//	alert(ev.offsetX + " "+ ev.offsetY);
+			function getBody()
+			{
+				var mousePVec2 = new b2Vec2(ev.offsetX, ev.offsetY);
+				aabb = new b2AABB();
+				aabb.lowerBound.x = ev.offsetX -0.1;
+				aabb.lowerBound.y = ev.offsetY - 0.1;
+				aabb.upperBound.x = ev.offsetX +0.1;
+				aabb.upperBound.y = ev.offsetY + 0.1;
+				var bodyball;
+				function getBodyCallBack(fixture)
+				{
+					var shape = fixture.GetShape();
+					if(fixture.GetBody().GetType() != b2Body.b2_staticBody)
+					{
+						inside = shape.TestPoint(fixture.GetBody().GetTransform(), mousePVec2);
+						if(inside)
+						{
+							bodyball = fixture.GetBody();
+							return false;
+						}
+					}
+					return true;
+				}
+				world.QueryAABB(getBodyCallBack, aabb);
+				return bodyball;
+			}
+			
+			
+			bodyball = getObjectFromWorld(world, 'RollBall');
+			var mouseJointDef = new b2MouseJointDef();
+			mouseJointDef.bodyA = world.GetGroundBody();
+			mouseJointDef.bodyB = bodyball;
+			mouseJointDef.target.Set(ev.offsetX/30, ev.offsetY/30);
+			mouseJointDef.collideConnected = true;
+			mouseJointDef.maxForce = 100000 ;//
+			mouseJoint = world.CreateJoint(mouseJointDef);
+		}
+        canvas.onmouseup = function(ev)
+		{
+			world.DestroyJoint(mouseJoint);            
+			mouseJoint = null;
+			
+		}
+		canvas.onmousemove = function(ev)
+		{
+			mouseJoint.SetTarget(new b2Vec2(1, ev.offsetY/30));
+		}
+		
+	
 		  
          //update
          function update() {
-            world.Step(1 / 24, 10, 10);
+            world.Step(1 /24, 10, 10);
             world.DrawDebugData();			
             world.ClearForces();
 			document.onkeypress=swtkeyboard;
 			RedrawWorld();
          };
-		 var animationBegin = -800;
+		 
 		 function RedrawWorld()
 		{
 			
@@ -298,46 +362,7 @@ imageObj.src = "jesse/002.jpg"; */
     		canvasHeight = parseInt(canvas.height);
 		//	context.clearRect(0, 0, canvasWidth, canvasHeight);
 			
-			
-			
-			DrawLayInSecene(context, "images/cloud.png",animationBegin, 0, 800,480);//画云
-			if(animationBegin >= 800)
-			{
-				animationBegin = -800
-			}
-			animationBegin = animationBegin + 0.5; 
-			
-			
-			DrawLayInSecene(context, "images/track.png", 0, 0, 800,480);//画轨道
-			
-			DrawLayInSecene(context, "images/lay.png", 0, 0, 800,480);//地面建造
-			
-			DrawLayInSecene(context, "images/playOne.png", 0, 0, 160,70);//playOne
-			
-			DrawLayInSecene(context, "images/playTwo.png", 640, 0, 160,70);//playTwo
-			
-			DrawLayInSecene(context, "number/1.png", 0, 0, 10,70);//数字 
-			
-			
-			var allBody = world.GetBodyList();
-			while(allBody)
-			{
-				if(allBody.GetUserData() == 'RollBall')
-				{
-					var position = allBody.GetPosition();
-					
-					DrawLayInSecene(context, "images/ball.png", (position.x-0.5)*30,(position.y-0.5)*30, 30,30);//playTwo
-					
-				}
-				if(allBody.GetUserData() == 'sun')
-				{
-					var position = allBody.GetPosition();
-					
-					DrawLayInSecene(context, "images/ball.png", (position.x-0.5)*30,(position.y-0.5)*30, 30,30);//playTwo
-				}
-				allBody = allBody.GetNext();
-			}
-			
+			DrowWorldEveryObject(world, context, canvas);		
 		}
 		
 		
