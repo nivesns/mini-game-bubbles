@@ -80,6 +80,8 @@ function DrowWorldEveryObject(world, context, canvas)
 	DrawScore(world, context, canvas);//画分数
 	
 	DrawBody(world, context, canvas);//画建立的有属性的物体
+	
+	
 }
 
 ////////////////////////////////////////////////////绘制云 
@@ -141,13 +143,90 @@ function DrawBody(world, context, canvas)
 					
 			DrawLayInSecene(context, "images/ball.png", (position.x-0.5)*30,(position.y-0.5)*30, 30,30);//playTwo
 		}
+		if(allBody.GetUserData() == 'Return')
+		{
+			var position = allBody.GetPosition();
+			
+			DrawLayInSecene(context, "images/return.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 30,30);//return 图标
+			
+		}
 		allBody = allBody.GetNext();
 	}
 }
+/////////////////////////////////////////////////////绘制返回图标
+
+
+
+
 /////////////////////////////////////////////////////判断一个物体是否静止 
 function JudgeStatic(moveBody)
 {
 	return !moveBody.IsAwake();
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////鼠标处理
 
+var mouseJoint = null;
+/////////////////////////////////////////////////////鼠标按下
+function MouseClickDownRollBall(ev, world, context, canvas)
+{
+	
+	bodyball = getObjectFromWorld(world, 'RollBall');
+	
+	var bodyballPosition = bodyball.GetPosition();
+	
+	if( !(ev.offsetX< (bodyballPosition.x+0.5)*30 && ev.offsetX > (bodyballPosition.x-0.5)*30 &&
+	ev.offsetY < (bodyballPosition.y + 0.5) *30 && ev.offsetY > (bodyballPosition.y-0.5)*30))
+	{
+		return ;
+	}
+	
+	var mouseJointDef = new b2MouseJointDef();
+	mouseJointDef.bodyA = world.GetGroundBody();
+	mouseJointDef.bodyB = bodyball;
+	mouseJointDef.target.Set(ev.offsetX/30, ev.offsetY/30);
+	mouseJointDef.collideConnected = true;
+	mouseJointDef.maxForce = 1000* bodyball.GetMass() ;//
+	if(mouseJoint != null)
+	{
+		world.DestroyJoint(mouseJoint);
+				       
+		mouseJoint = null;
+	}
+	mouseJoint = world.CreateJoint(mouseJointDef);
+}
+//////////////////////////////////////////////////鼠标弹起
+function MouseClickUpRollBall(ev, world, context, canvas)
+{
+	if(mouseJoint != null)
+	{
+		world.DestroyJoint(mouseJoint);            
+		mouseJoint = null;
+	}
+}
+
+/////////////////////////////////////////////////鼠标移动
+function MouseMoveRollBall(ev, world, context, canvas)
+{
+	if(mouseJoint != null)
+	{
+		mouseJoint.SetTarget(new b2Vec2(ev.offsetX /30, ev.offsetY/30));
+	}
+}
+////////////////////////////////////////////////////////////////////////////////////////////鼠标处理return按钮
+function MouseClickDownReturn(ev, world, context, canvas)
+{
+	bodyball = getObjectFromWorld(world, 'Return');
+	
+	var bodyballPosition = bodyball.GetPosition();
+	
+	if( ev.offsetX< (bodyballPosition.x+0.5)*30 && ev.offsetX > (bodyballPosition.x-0.5)*30 &&
+	ev.offsetY < (bodyballPosition.y + 0.5) *30 && ev.offsetY > (bodyballPosition.y-0.5)*30)
+	{
+		alert("click");
+	}
+}
+function MouseClickUpReturn(ev, world, context, canvas)
+{
+	
+}
