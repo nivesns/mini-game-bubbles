@@ -305,7 +305,7 @@ imageObj.src = "jesse/002.jpg"; */
 			addObjectToWorld(world, 1, 480/30-1,'Return' ,b2Body.b2_staticBody, fixDef); //添加按钮
 		}  
 		
-		/////////////////////////////////////////////////////添加物体，可能要运行多次
+		/////////////////////////////////////////////////////添加物体每次进行测试都要重新绘制的图形
 		{
 			
 			addMultipleObject(world, fixDef);
@@ -319,20 +319,20 @@ imageObj.src = "jesse/002.jpg"; */
 	
 		canvas.onmousedown = function(ev)
 		{	
-			MouseClickDownRollBall(ev, world, context, canvas);	
+			MouseClickDownRollBall(ev, world, context, canvas, fixDef);	
 			
 			MouseClickDownReturn(ev, world, context, canvas, fixDef);	
 			
 		}
         canvas.onmouseup = function(ev)
 		{	
-			MouseClickUpRollBall(ev, world, context, canvas);
+			MouseClickUpRollBall(ev, world, context, canvas, fixDef);
 			
 			MouseClickUpReturn(ev, world, context, canvas, fixDef);	
 		}
 		canvas.onmousemove = function(ev)
 		{
-			MouseMoveRollBall(ev, world, context, canvas);
+			MouseMoveRollBall(ev, world, context, canvas, fixDef);
 			
 			MouseMoveReturn(ev, world, context, canvas, fixDef);
 		}
