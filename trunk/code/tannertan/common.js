@@ -137,11 +137,11 @@ function DrawBody(world, context, canvas)
 			DrawLayInSecene(context, "images/ball.png", (position.x-0.5)*30,(position.y-0.5)*30, 30,30);//playTwo
 					
 		}
-		if(allBody.GetUserData() == 'sun')
+		if(allBody.GetUserData() == 'accelerate')
 		{
 			var position = allBody.GetPosition();
 					
-			DrawLayInSecene(context, "images/ball.png", (position.x-0.5)*30,(position.y-0.5)*30, 30,30);//playTwo
+			DrawLayInSecene(context, "images/accelerate.png", (position.x-0.5)*30,(position.y-0.5)*30, 30,30);//playTwo
 		}
 		if(allBody.GetUserData() == 'Return')
 		{
@@ -155,7 +155,15 @@ function DrawBody(world, context, canvas)
 		{
 			var position = allBody.GetPosition();
 			
-			DrawLayInSecene(context, "images/ball.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 30,30);//return 图标
+			DrawLayInSecene(context, "images/ball.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 30,30);//画还有几个球的图标
+		}
+		
+		if(allBody.GetUserData() == 'slowDown')
+		{
+			var position = allBody.GetPosition();
+			
+			DrawLayInSecene(context, "images/slowDown.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 30,30);//return 图标
+			
 		}
 		allBody = allBody.GetNext();
 	}
@@ -239,7 +247,7 @@ var mouseJoint = null;
 var clickRollBallStation = 0;
 /////////////////////////////////////////////////////鼠标按下
 var bodyballRollBallPosition ;
-function MouseClickDownRollBall(ev, world, context, canvas)
+function MouseClickDownRollBall(ev, world, context, canvas , fixDef)
 {
 	
 //	bodyball = getObjectFromWorld(world, 'RollBall');
@@ -264,6 +272,8 @@ function MouseClickDownRollBall(ev, world, context, canvas)
 	}
 	clickRollBallStation = 1;
 	bodyball.SetType(b2Body.b2_dynamicBody);
+	
+	addMultipleObject(world, fixDef);
 	var mouseJointDef = new b2MouseJointDef();
 	mouseJointDef.bodyA = world.GetGroundBody();
 	mouseJointDef.bodyB = bodyball;
@@ -279,7 +289,7 @@ function MouseClickDownRollBall(ev, world, context, canvas)
 	mouseJoint = world.CreateJoint(mouseJointDef);
 }
 //////////////////////////////////////////////////鼠标弹起
-function MouseClickUpRollBall(ev, world, context, canvas)
+function MouseClickUpRollBall(ev, world, context, canvas, fixDef)
 {
 	if(mouseJoint != null)
 	{
@@ -290,7 +300,7 @@ function MouseClickUpRollBall(ev, world, context, canvas)
 }
 
 /////////////////////////////////////////////////鼠标移动
-function MouseMoveRollBall(ev, world, context, canvas)
+function MouseMoveRollBall(ev, world, context, canvas, fixDef)
 {
 	if(mouseJoint != null)
 	{
@@ -371,9 +381,25 @@ function ClickReturnRecover(world, fixDef)
 ///////////////////////////////////////////////////////////////////////////每次从新玩游戏都需要重新建立的对象
 function addMultipleObject(world, fixDef)
 {
-	addObjectToWorld(world,13,12,'sun',b2Body.b2_staticBody,fixDef);//添加加上的物体
+	var allBodyList = world.GetBodyList();
+	while(allBodyList)
+	{
+		if(allBodyList.GetUserData() == "accelerate" ||allBodyList.GetUserData() == "slowDown")
+		{
+			var fixList = allBodyList.GetFixtureList();
+			while(fixList)
+			{
+				allBodyList.DestroyFixture(fixList);
+				fixList = fixList.GetNext();
+			}
+			world.DestroyBody(allBodyList);
+		}
+		allBodyList = allBodyList.GetNext();
+	}
+	
+	addObjectToWorld(world,13,11.5,'accelerate',b2Body.b2_staticBody,fixDef);//添加加上的物体
 			
-	addObjectToWorld(world,15,10,'prick',b2Body.b2_staticBody,fixDef);//添加爆炸的物体
+	addObjectToWorld(world,15,10,'slowDown',b2Body.b2_staticBody,fixDef);//添加爆炸的物体
 	
 }
 
