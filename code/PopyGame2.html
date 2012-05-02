@@ -165,7 +165,6 @@ imageObj.src = "jesse/002.jpg"; */
 		return vec2Array;
 	  }
 
-		//添加鼠标消息
 		 
 		 
 		
@@ -175,7 +174,7 @@ imageObj.src = "jesse/002.jpg"; */
          var bodyDef = new b2BodyDef;
          bodyDef.type = b2Body.b2_dynamicBody;
 		 bodyDef.userData = 'RollBall';
-         bodyDef.position.Set(1, 2);
+         bodyDef.position.Set(1.1, 1.2);
          var fixDef = new b2FixtureDef;
          fixDef.density = 1.0;
          fixDef.friction = 0.5;
@@ -208,7 +207,8 @@ imageObj.src = "jesse/002.jpg"; */
            fixDef1.friction = 0.1;
            fixDef1.restitution =0;
 		   fixDef1.shape = new b2PolygonShape;
-		   fixDef1.shape.SetAsArray([new b2Vec2(a1[i][0]/30,a1[i][1]/30),new b2Vec2(a1[i+1][0]/30,a1[i+1][1]/30),new b2Vec2(a1[i+1][0]/30, 16),new b2Vec2(a1[i][0]/30, 16)]);
+		   fixDef1.shape.SetAsArray([new b2Vec2(a1[i][0]/30,a1[i][1]/30),new b2Vec2(a1[i+1][0]/30,a1[i+1][1]/30),
+		   new b2Vec2(a1[i+1][0]/30, 16),new b2Vec2(a1[i][0]/30, 16)]);
 			 holder.CreateFixture(fixDef1);
         // holder.CreateFixture(fixDef3);		
 		}
@@ -224,13 +224,12 @@ imageObj.src = "jesse/002.jpg"; */
 		
 		
 		var fixDef4 = new b2FixtureDef;
-       fixDef4.density = 10.0;
+       	fixDef4.density = 10.0;
         fixDef4.friction = 0.1;
         fixDef4.restitution =0;
 		fixDef4.shape = new b2PolygonShape;
 		fixDef4.shape.SetAsArray([new b2Vec2(5, -2.5),new b2Vec2(25, -9),new b2Vec2(25, 2),new b2Vec2(0, 2)]);
-		//fixDef3.shape.SetAsArray(aa);
-		//fixDef3.shape.SetAsArray([new b2Vec2(0, -5),new b2Vec2(1.1, -1.7),new b2Vec2(2.1, -2.5),new b2Vec2(3.1, 0),new b2Vec2(4.1, -5),new b2Vec2(5.1, -1.7),new b2Vec2(6.1, -1.0),new b2Vec2(6.6, -1.0),new b2Vec2(6.6, 2),new b2Vec2(0, 2)]);
+		
 
 
          var popy = world.CreateBody(bodyDef);
@@ -277,21 +276,44 @@ imageObj.src = "jesse/002.jpg"; */
          world.SetDebugDraw(debugDraw);
 
          window.setInterval(update, 100/6);
+		 ///////////////////////////////////////////////////////////////////////////删除场景中的一个没有名字的动态物体
+		 {
+			var allBodyList = world.GetBodyList();
+			
+			while(allBodyList)
+			{
+				if( allBodyList.GetType() == b2Body.b2_dynamicBody)
+				{
+					if(allBodyList.GetUserData() == null)
+					{
+						var fixList = allBodyList.GetFixtureList();
+						while(fixList)
+						{
+							allBodyList.DestroyFixture(fixList);
+							fixList = fixList.GetNext();
+						}
+						world.DestroyBody(allBodyList);
+					}
+				}
+				allBodyList = allBodyList.GetNext();
+			}
+		 }
 		
-		//添加碰撞物体  
-		
+		//添加碰撞物体
+		////////////////////////////////////////////////////添加该物体总是不变，只运行一次。
 		{
-			addObjectToWorld(world,13,12,'sun',b2Body.b2_staticBody,fixDef);
+			addObjectToWorld(world, 1, 480/30-1,'Return' ,b2Body.b2_staticBody, fixDef); //添加按钮
+		}  
+		
+		/////////////////////////////////////////////////////添加物体，可能要运行多次
+		{
 			
-			addObjectToWorld(world,15,10,'prick',b2Body.b2_staticBody,fixDef);
-			
-			addObjectToWorld(world, 1, 480/30-1,'Return' ,b2Body.b2_staticBody, fixDef);
-			
+			addMultipleObject(world, fixDef);
+					
 		}
-		//////////////////////////////////添加按钮
+		///////////////////////////////////////////////////////添加五个球 
 		{
-			
-			
+			ClickReturnRecover(world, fixDef);	
 		}
 		/////////////////////////////////////////////////////////////鼠标消息
 	
@@ -299,17 +321,20 @@ imageObj.src = "jesse/002.jpg"; */
 		{	
 			MouseClickDownRollBall(ev, world, context, canvas);	
 			
-			MouseClickDownReturn(ev, world, context, canvas);	
+			MouseClickDownReturn(ev, world, context, canvas, fixDef);	
+			
 		}
         canvas.onmouseup = function(ev)
 		{	
 			MouseClickUpRollBall(ev, world, context, canvas);
 			
-			MouseClickUpReturn(ev, world, context, canvas);	
+			MouseClickUpReturn(ev, world, context, canvas, fixDef);	
 		}
 		canvas.onmousemove = function(ev)
 		{
 			MouseMoveRollBall(ev, world, context, canvas);
+			
+			MouseMoveReturn(ev, world, context, canvas, fixDef);
 		}
 		
 		////////////////////////////////////////////////////添加四周的围墙，以致求不会掉出该场景
@@ -346,7 +371,11 @@ imageObj.src = "jesse/002.jpg"; */
     		canvasHeight = parseInt(canvas.height);
 		//	context.clearRect(0, 0, canvasWidth, canvasHeight);
 			
-			DrowWorldEveryObject(world, context, canvas);		
+			DrowWorldEveryObject(world, context, canvas);
+			
+			
+			DeleteActionStaticObject(world);	
+			
 		}
 		
 		
