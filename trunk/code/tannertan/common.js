@@ -150,37 +150,120 @@ function DrawBody(world, context, canvas)
 			DrawLayInSecene(context, "images/return.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 30,30);//return 图标
 			
 		}
+		if(allBody.GetUserData() == "RollBall_1" || allBody.GetUserData() == "RollBall_2" ||allBody.GetUserData() == "RollBall_3" ||
+		allBody.GetUserData() == "RollBall_4" ||allBody.GetUserData() == "RollBall_5" )
+		{
+			var position = allBody.GetPosition();
+			
+			DrawLayInSecene(context, "images/ball.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 30,30);//return 图标
+		}
 		allBody = allBody.GetNext();
 	}
 }
-/////////////////////////////////////////////////////绘制返回图标
-
-
-
+/////////////////////////////////////////////////////返回场景中动态物体的个数
+function NumberDynamicInScene(world)
+{
+	var allBody = world.GetBodyList();
+	var i = 0;
+	while(allBody)
+	{
+		if( allBody.GetType() == b2Body.b2_dynamicBody)
+		{
+			i = i +1;
+		}
+		allBody = allBody.GetNext();
+	}
+	return i;
+}
 
 /////////////////////////////////////////////////////判断一个物体是否静止 
 function JudgeStatic(moveBody)
 {
 	return !moveBody.IsAwake();
 }
+///////////////////////////////////////////////////////////////////////////////////判断点击的是哪个球
+function GetWhileRollBall(world, ev)
+{
+	var allBodyList = world.GetBodyList();
+	while(allBodyList)
+	{
+		var position = allBodyList.GetPosition();
+		if(allBodyList.GetUserData() == 'RollBall_1')
+		{
+			if(ev.offsetX< (position.x+0.5)*30 && ev.offsetX > (position.x-0.5)*30 && 
+			ev.offsetY < (position.y + 0.5) *30 && ev.offsetY > (position.y-0.5)*30)
+			{
+				return allBodyList;
+			}
+		}
+		if(allBodyList.GetUserData() == 'RollBall_2')
+		{
+			if(ev.offsetX< (position.x+0.5)*30 && ev.offsetX > (position.x-0.5)*30 && 
+			ev.offsetY < (position.y + 0.5) *30 && ev.offsetY > (position.y-0.5)*30)
+			{
+				return allBodyList;
+			}
+		}
+		if(allBodyList.GetUserData() == 'RollBall_3')
+		{
+			if(ev.offsetX< (position.x+0.5)*30 && ev.offsetX > (position.x-0.5)*30 && 
+			ev.offsetY < (position.y + 0.5) *30 && ev.offsetY > (position.y-0.5)*30)
+			{
+				return allBodyList;
+			}
+		}
+		if(allBodyList.GetUserData() == 'RollBall_4')
+		{
+			if(ev.offsetX< (position.x+0.5)*30 && ev.offsetX > (position.x-0.5)*30 && 
+			ev.offsetY < (position.y + 0.5) *30 && ev.offsetY > (position.y-0.5)*30)
+			{
+				return allBodyList;
+			}
+		}
+		if(allBodyList.GetUserData() == 'RollBall_5')
+		{
+			if(ev.offsetX< (position.x+0.5)*30 && ev.offsetX > (position.x-0.5)*30 && 
+			ev.offsetY < (position.y + 0.5) *30 && ev.offsetY > (position.y-0.5)*30)
+			{
+				return allBodyList;
+			}
+		}
+		allBodyList = allBodyList.GetNext();
+	}
+	return null;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////鼠标处理
-
+////////////////////////////////////////////////////////////////////////////////////////////////
 var mouseJoint = null;
+var clickRollBallStation = 0;
 /////////////////////////////////////////////////////鼠标按下
+var bodyballRollBallPosition ;
 function MouseClickDownRollBall(ev, world, context, canvas)
 {
 	
-	bodyball = getObjectFromWorld(world, 'RollBall');
+//	bodyball = getObjectFromWorld(world, 'RollBall');
 	
-	var bodyballPosition = bodyball.GetPosition();
-	
-	if( !(ev.offsetX< (bodyballPosition.x+0.5)*30 && ev.offsetX > (bodyballPosition.x-0.5)*30 &&
-	ev.offsetY < (bodyballPosition.y + 0.5) *30 && ev.offsetY > (bodyballPosition.y-0.5)*30))
+	if(NumberDynamicInScene(world) != 0)
 	{
 		return ;
 	}
 	
+	bodyball = GetWhileRollBall(world, ev);
+	if(bodyball == null)
+	{
+		return ;
+	}
+	
+	var bodyballRollBallPosition = bodyball.GetPosition();
+	
+	if( !(ev.offsetX< (bodyballRollBallPosition.x+0.5)*30 && ev.offsetX > (bodyballRollBallPosition.x-0.5)*30 &&
+	ev.offsetY < (bodyballRollBallPosition.y + 0.5) *30 && ev.offsetY > (bodyballRollBallPosition.y-0.5)*30))
+	{
+		return ;
+	}
+	clickRollBallStation = 1;
+	bodyball.SetType(b2Body.b2_dynamicBody);
 	var mouseJointDef = new b2MouseJointDef();
 	mouseJointDef.bodyA = world.GetGroundBody();
 	mouseJointDef.bodyB = bodyball;
@@ -200,6 +283,7 @@ function MouseClickUpRollBall(ev, world, context, canvas)
 {
 	if(mouseJoint != null)
 	{
+		clickRollBallStation = 0;
 		world.DestroyJoint(mouseJoint);            
 		mouseJoint = null;
 	}
@@ -211,22 +295,114 @@ function MouseMoveRollBall(ev, world, context, canvas)
 	if(mouseJoint != null)
 	{
 		mouseJoint.SetTarget(new b2Vec2(ev.offsetX /30, ev.offsetY/30));
+	
+		if(ev.offsetX < 0.01 *30 || ev.offsetX > 800 - 0.01*30 ||
+		ev.offsetY < 0.01 *30 || ev.offsetY > 480 - 0.01*30 )
+		{
+			world.DestroyJoint(mouseJoint);
+			clickRollBallStation = 0;	       
+			mouseJoint = null;
+		}
+		
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////鼠标处理return按钮
-function MouseClickDownReturn(ev, world, context, canvas)
+var clickReturnReturn  = 0;
+var bodyballReturnPosition ;
+function MouseClickDownReturn(ev, world, context, canvas, fixDef)
 {
 	bodyball = getObjectFromWorld(world, 'Return');
 	
-	var bodyballPosition = bodyball.GetPosition();
+	bodyballReturnPosition = bodyball.GetPosition();
 	
-	if( ev.offsetX< (bodyballPosition.x+0.5)*30 && ev.offsetX > (bodyballPosition.x-0.5)*30 &&
-	ev.offsetY < (bodyballPosition.y + 0.5) *30 && ev.offsetY > (bodyballPosition.y-0.5)*30)
+	if( ev.offsetX< (bodyballReturnPosition.x+0.5)*30 && ev.offsetX > (bodyballReturnPosition.x-0.5)*30 &&
+	ev.offsetY < (bodyballReturnPosition.y + 0.5) *30 && ev.offsetY > (bodyballReturnPosition.y-0.5)*30)
 	{
-		alert("click");
+		clickReturnReturn = 1;
+		
 	}
 }
-function MouseClickUpReturn(ev, world, context, canvas)
+function MouseClickUpReturn(ev, world, context, canvas, fixDef)
 {
+	if(clickReturnReturn == 1)
+	{
+		ClickReturnRecover(world, fixDef);
+		clickReturnReturn = 0;
+	}
+}
+function MouseMoveReturn(ev, world, context, canvas , fixDef)
+{
+	if(clickReturnReturn ==  1)
+	{
+		if( !(ev.offsetX< (bodyballReturnPosition.x+0.5)*30 && ev.offsetX > (bodyballReturnPosition.x-0.5)*30 &&
+		ev.offsetY < (bodyballReturnPosition.y + 0.5) *30 && ev.offsetY > (bodyballReturnPosition.y-0.5)*30))
+		{		
+			clickReturnReturn = 0;
+		}
+	}
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////点击返回标识后的物体
+function ClickReturnRecover(world, fixDef)
+{
+	var allBodyList = world.GetBodyList();
+	while(allBodyList)
+	{
+		if(allBodyList.GetUserData() == "RollBall_1" ||allBodyList.GetUserData() == "RollBall_2" ||allBodyList.GetUserData() == "RollBall_3"
+		||allBodyList.GetUserData() == "RollBall_4"||allBodyList.GetUserData() == "RollBall_5")
+		{
+			var fixList = allBodyList.GetFixtureList();
+			while(fixList)
+			{
+				allBodyList.DestroyFixture(fixList);
+				fixList = fixList.GetNext();
+			}
+			world.DestroyBody(allBodyList);
+		}
+		allBodyList = allBodyList.GetNext();
+	}
+	addObjectToWorld(world, 7, 1,'RollBall_1' ,b2Body.b2_staticBody, fixDef);
+	addObjectToWorld(world, 8.5, 1,'RollBall_2' ,b2Body.b2_staticBody, fixDef);
+	addObjectToWorld(world, 10, 1,'RollBall_3' ,b2Body.b2_staticBody, fixDef);
+	addObjectToWorld(world, 11.5, 1,'RollBall_4' ,b2Body.b2_staticBody, fixDef);
+	addObjectToWorld(world, 13, 1,'RollBall_5' ,b2Body.b2_staticBody, fixDef);		
+}
+///////////////////////////////////////////////////////////////////////////每次从新玩游戏都需要重新建立的对象
+function addMultipleObject(world, fixDef)
+{
+	addObjectToWorld(world,13,12,'sun',b2Body.b2_staticBody,fixDef);//添加加上的物体
+			
+	addObjectToWorld(world,15,10,'prick',b2Body.b2_staticBody,fixDef);//添加爆炸的物体
 	
+}
+
+/////////////////////////////////////////////////////////////////////////////////删除场景中动态静止的物体
+function DeleteActionStaticObject(world)
+{
+	dynamicObject = GetDynamicObjectInScene(world);
+	if(dynamicObject == null)
+	{
+		return null;
+	}
+	if(JudgeStatic(dynamicObject) && clickRollBallStation == 0)
+	{
+		////////////////////////////////////////////////////////////在该地方加上消失之前的一些特效。
+		deleteOjectFromWorld(world, dynamicObject.GetUserData());
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////获得场景中动态的物体 
+function GetDynamicObjectInScene(world)
+{
+	var allBodyList = world.GetBodyList();
+	while(allBodyList)
+	{
+		if(allBodyList.GetType() == b2Body.b2_dynamicBody)
+		{
+			return allBodyList;
+		}
+		allBodyList = allBodyList.GetNext();
+	}
+	return null;
 }
