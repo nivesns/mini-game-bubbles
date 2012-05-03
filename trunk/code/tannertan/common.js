@@ -1,5 +1,8 @@
 
-var globalNumberOfBall = 0;
+var globalNumberOfBall_PlayerA = 0;
+var globalColorFrame = 0;
+var globalCanChange = false;///现在是否可以颜色渐变
+var globalAddOneAffect = 0;//表示现在这个加1特效还能持续多久。
 /////////////////////////////////////////////////////////播放音乐   src表示的是音乐的路径
 function PlayMusic(src)
 {
@@ -122,7 +125,21 @@ function DrawScore(world, context, canvas)
 {
 	DrawLayInSecene(context, "number/1.png", 0, 0, 10,70);//数字 
 }
-
+/////////////////////////////////////////////////////根据时间来绘制球的颜色
+function DrawBallColor(context, position)
+{
+	var rate = 20;
+	var index = parseInt(globalColorFrame / rate);
+	if(index < 18)//表示图片有多少张
+	{
+		var filePath = "images/change/"+ parseInt(index/10) + parseInt(index %10)+ ".png"; 
+		DrawLayInSecene(context, filePath, (position.x-0.5)*30,(position.y-0.5)*30, 30,30)
+	}
+	else
+	{
+		globalColorFrame = 0;
+	}
+}
 ///////////////////////////////////////////////////绘制Body样的东西
 
 function DrawBody(world, context, canvas)
@@ -135,8 +152,12 @@ function DrawBody(world, context, canvas)
 		{
 			var position = allBody.GetPosition();
 			
-			DrawLayInSecene(context, "images/ball.png", (position.x-0.5)*30,(position.y-0.5)*30, 30,30);//playTwo
-					
+			DrawBallColor(context, position);
+			
+			if(globalCanChange == true)
+			{
+				globalColorFrame =  globalColorFrame + 1;
+			}
 		}
 		if(allBody.GetUserData() == 'accelerate')
 		{
@@ -168,7 +189,20 @@ function DrawBody(world, context, canvas)
 		}
 		allBody = allBody.GetNext();
 	}
-	DrawLayInSecene(context, "images/slowDown.png",10*30 , 1*30, 30,30);//return 图标
+	if(globalAddOneAffect > 0)
+	{
+		DrawLayInSecene(context, "images/finish.png",12*30 , globalAddOneAffect/2+60, 30,30);//绘制进入目标坑动画
+		globalAddOneAffect--;
+	}
+	{
+		if(globalNumberOfBall_PlayerA == 5)
+		{
+			//////进入下一关。
+		}
+		var path = "number/"+globalNumberOfBall_PlayerA + ".png";
+		DrawLayInSecene(context, path,6*30 ,0.7*30 , 20,30)
+	}
+	
 }
 /////////////////////////////////////////////////////返回场景中动态物体的个数
 function NumberDynamicInScene(world)
@@ -258,6 +292,7 @@ function GetWhileRollBall(world, ev)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 var mouseJoint = null;
 var clickRollBallStation = 0;
+var  beforeMouseMove  = new Box2D.Common.Math.b2Vec2();//进行只能向一个方向移动的时候用到
 /////////////////////////////////////////////////////鼠标按下
 var bodyballRollBallPosition ;
 function MouseClickDownRollBall(ev, world, context, canvas , fixDef)
@@ -286,6 +321,11 @@ function MouseClickDownRollBall(ev, world, context, canvas , fixDef)
 	clickRollBallStation = 1;
 	bodyball.SetType(b2Body.b2_dynamicBody);
 	
+	globalCanChange = true;
+	globalColorFrame = 0;//设置颜色可变
+
+	beforeMouseMove.x = 1000000;//使得每次点击球来玩的时候他的位置总是最大的，
+	beforeMouseMove.y = 1000000;
 	
 	var mouseJointDef = new b2MouseJointDef();
 	mouseJointDef.bodyA = world.GetGroundBody();
@@ -306,25 +346,46 @@ function MouseClickUpRollBall(ev, world, context, canvas, fixDef)
 {
 	if(mouseJoint != null)
 	{
+		var object = getObjectFromWorld(world,"RollBall");
+		
+		SetObjectSpeed(object, globalColorFrame);
 		clickRollBallStation = 0;
 		world.DestroyJoint(mouseJoint);            
 		mouseJoint = null;
+		globalCanChange = false;
+		globalColorFrame = 0;//设置颜色改变停止
 	}
 }
 
 /////////////////////////////////////////////////鼠标移动
+
 function MouseMoveRollBall(ev, world, context, canvas, fixDef)
 {
 	if(mouseJoint != null)
 	{
-		mouseJoint.SetTarget(new b2Vec2(ev.offsetX /30, ev.offsetY/30));
-	
+			
+		 if(beforeMouseMove.x > ev.offsetX || ev.offsetX /30< 2)
+		 {
+			mouseJoint.SetTarget(new b2Vec2(ev.offsetX/30, ev.offsetY/30));//ev.offsetX /30
+		
+			beforeMouseMove.x = ev.offsetX;
+		 }
+		 else
+		 {
+			 mouseJoint.SetTarget(new b2Vec2(beforeMouseMove.x/30, ev.offsetY/30));//ev.offsetX /30
+		 }
 		if(ev.offsetX < 0.01 *30 || ev.offsetX > 800 - 0.01*30 ||
 		ev.offsetY < 0.01 *30 || ev.offsetY > 480 - 0.01*30 )
 		{
+			var object = getObjectFromWorld(world,"RollBall");
+			SetObjectSpeed(object, globalColorFrame);
+			
 			world.DestroyJoint(mouseJoint);
 			clickRollBallStation = 0;	       
 			mouseJoint = null;
+			globalCanChange = false;
+			globalColorFrame = 0;//设置颜色改变停止
+			
 		}
 		
 	}
@@ -432,12 +493,29 @@ function DeleteActionStaticObject(world, fixDef)
 	if(JudgeStatic(dynamicObject) && clickRollBallStation == 0)
 	{
 		////////////////////////////////////////////////////////////在该地方加上消失之前的一些特效。
-		addMultipleObject(world, fixDef);
+		position = dynamicObject.GetPosition();
+		if(position.x > 18 && position.x < 20 && position.y < 13 && position.y > 11)
+		{
+			globalAddOneAffect = 60;//定义加1动画的时间
+			globalNumberOfBall_PlayerA = globalNumberOfBall_PlayerA + 1;//表示进球数量增加
+			
+			///说明调入了正确的坑内
+		}
+		else
+		{
+			//调入的坑不正确
+			alert("error");
+		}
+		
 		
 		deleteOjectFromWorld(world, dynamicObject.GetUserData());
-		
+		addMultipleObject(world, fixDef);
 		AddInitBall(world, fixDef);
+		
+		
 		ResetTheNumber(0,0);//作用是为了防止碰撞时出现的bug
+		
+		
 	}
 }
 
@@ -458,5 +536,10 @@ function GetDynamicObjectInScene(world)
 ///////////////////////////////////////////////////////////////////////////////添加初始化时的一个球
 function AddInitBall(world, fixDef)
 {
-	addObjectToWorld(world, 5, 12.5, 'RollBall',b2Body.b2_staticBody ,fixDef);
+	addObjectToWorld(world, 5, 12.32, 'RollBall',b2Body.b2_staticBody ,fixDef);
+}
+//////////////////////////////////////////////////////////////////////////////设置一个对象的速度
+function SetObjectSpeed(object, i)
+{
+	object.SetLinearVelocity(new b2Vec2(0, i/20));
 }
