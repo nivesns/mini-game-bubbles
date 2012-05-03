@@ -198,6 +198,7 @@ function DrawBody(world, context, canvas)
 		if(globalNumberOfBall_PlayerA == 5)
 		{
 			//////进入下一关。
+			alert("可以进入下一关了");
 		}
 		var path = "number/"+globalNumberOfBall_PlayerA + ".png";
 		DrawLayInSecene(context, path,6*30 ,0.7*30 , 20,30)
@@ -504,7 +505,7 @@ function DeleteActionStaticObject(world, fixDef)
 		else
 		{
 			//调入的坑不正确
-			alert("error");
+		//	alert("error");
 		}
 		
 		
