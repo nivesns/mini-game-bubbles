@@ -17,7 +17,7 @@
 <script type="text/javascript" src="tannertan/common.js"></script>
 <!--<script type="text/javascript" src="jesse/myjs.js" ></script>-->
 <script type="text/javascript">
-//播放背景音乐
+//播放和谐背景音乐
 	PlayMusic('musicSrc/bg.mp3');
 	var canvas = document.getElementById("canvas");
 	var a1 = new Array();
@@ -284,7 +284,7 @@ imageObj.src = "jesse/002.jpg"; */
 			{
 				if( allBodyList.GetType() == b2Body.b2_dynamicBody)
 				{
-					if(allBodyList.GetUserData() == null)
+					if(allBodyList.GetUserData() == null || allBodyList.GetUserData() == 'RollBall')
 					{
 						var fixList = allBodyList.GetFixtureList();
 						while(fixList)
@@ -311,9 +311,11 @@ imageObj.src = "jesse/002.jpg"; */
 			addMultipleObject(world, fixDef);
 					
 		}
-		///////////////////////////////////////////////////////添加五个球 
+		///////////////////////////////////////////////////////添加五个球 报废，现在只能添加一个球，郁闷
 		{
-			ClickReturnRecover(world, fixDef);	
+		//	ClickReturnRecover(world, fixDef);	
+		    AddInitBall(world, fixDef);
+		
 		}
 		/////////////////////////////////////////////////////////////鼠标消息
 	
@@ -374,7 +376,7 @@ imageObj.src = "jesse/002.jpg"; */
 			DrowWorldEveryObject(world, context, canvas);
 			
 			
-			DeleteActionStaticObject(world);	
+			DeleteActionStaticObject(world, fixDef);	
 			
 		}
 		

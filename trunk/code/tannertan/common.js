@@ -1,4 +1,5 @@
 
+var globalNumberOfBall = 0;
 /////////////////////////////////////////////////////////播放音乐   src表示的是音乐的路径
 function PlayMusic(src)
 {
@@ -167,6 +168,7 @@ function DrawBody(world, context, canvas)
 		}
 		allBody = allBody.GetNext();
 	}
+	DrawLayInSecene(context, "images/slowDown.png",10*30 , 1*30, 30,30);//return 图标
 }
 /////////////////////////////////////////////////////返回场景中动态物体的个数
 function NumberDynamicInScene(world)
@@ -196,7 +198,18 @@ function GetWhileRollBall(world, ev)
 	while(allBodyList)
 	{
 		var position = allBodyList.GetPosition();
-		if(allBodyList.GetUserData() == 'RollBall_1')
+		///添加的新代码
+		if(allBodyList.GetUserData() == 'RollBall')
+		{
+			if(ev.offsetX< (position.x+0.5)*30 && ev.offsetX > (position.x-0.5)*30 && 
+			ev.offsetY < (position.y + 0.5) *30 && ev.offsetY > (position.y-0.5)*30)
+			{
+				return allBodyList;
+			}
+		}
+		
+		////下面这些报废的代码
+	/*	if(allBodyList.GetUserData() == 'RollBall_1')
 		{
 			if(ev.offsetX< (position.x+0.5)*30 && ev.offsetX > (position.x-0.5)*30 && 
 			ev.offsetY < (position.y + 0.5) *30 && ev.offsetY > (position.y-0.5)*30)
@@ -235,7 +248,7 @@ function GetWhileRollBall(world, ev)
 			{
 				return allBodyList;
 			}
-		}
+		}*/
 		allBodyList = allBodyList.GetNext();
 	}
 	return null;
@@ -273,7 +286,7 @@ function MouseClickDownRollBall(ev, world, context, canvas , fixDef)
 	clickRollBallStation = 1;
 	bodyball.SetType(b2Body.b2_dynamicBody);
 	
-	addMultipleObject(world, fixDef);
+	
 	var mouseJointDef = new b2MouseJointDef();
 	mouseJointDef.bodyA = world.GetGroundBody();
 	mouseJointDef.bodyB = bodyball;
@@ -336,7 +349,7 @@ function MouseClickUpReturn(ev, world, context, canvas, fixDef)
 {
 	if(clickReturnReturn == 1)
 	{
-		ClickReturnRecover(world, fixDef);
+	//	ClickReturnRecover(world, fixDef);  //报废，不用了， 现在的返回消息没有了
 		clickReturnReturn = 0;
 	}
 }
@@ -376,7 +389,10 @@ function ClickReturnRecover(world, fixDef)
 	addObjectToWorld(world, 8.5, 1,'RollBall_2' ,b2Body.b2_staticBody, fixDef);
 	addObjectToWorld(world, 10, 1,'RollBall_3' ,b2Body.b2_staticBody, fixDef);
 	addObjectToWorld(world, 11.5, 1,'RollBall_4' ,b2Body.b2_staticBody, fixDef);
-	addObjectToWorld(world, 13, 1,'RollBall_5' ,b2Body.b2_staticBody, fixDef);		
+	addObjectToWorld(world, 13, 1,'RollBall_5' ,b2Body.b2_staticBody, fixDef);	
+	
+	addMultipleObject(world, fixDef);
+		
 }
 ///////////////////////////////////////////////////////////////////////////每次从新玩游戏都需要重新建立的对象
 function addMultipleObject(world, fixDef)
@@ -401,10 +417,12 @@ function addMultipleObject(world, fixDef)
 			
 	addObjectToWorld(world,15,10,'slowDown',b2Body.b2_staticBody,fixDef);//添加爆炸的物体
 	
+	
+	
 }
 
 /////////////////////////////////////////////////////////////////////////////////删除场景中动态静止的物体
-function DeleteActionStaticObject(world)
+function DeleteActionStaticObject(world, fixDef)
 {
 	dynamicObject = GetDynamicObjectInScene(world);
 	if(dynamicObject == null)
@@ -414,7 +432,12 @@ function DeleteActionStaticObject(world)
 	if(JudgeStatic(dynamicObject) && clickRollBallStation == 0)
 	{
 		////////////////////////////////////////////////////////////在该地方加上消失之前的一些特效。
+		addMultipleObject(world, fixDef);
+		
 		deleteOjectFromWorld(world, dynamicObject.GetUserData());
+		
+		AddInitBall(world, fixDef);
+		ResetTheNumber(0,0);//作用是为了防止碰撞时出现的bug
 	}
 }
 
@@ -431,4 +454,9 @@ function GetDynamicObjectInScene(world)
 		allBodyList = allBodyList.GetNext();
 	}
 	return null;
+}
+///////////////////////////////////////////////////////////////////////////////添加初始化时的一个球
+function AddInitBall(world, fixDef)
+{
+	addObjectToWorld(world, 5, 12.5, 'RollBall',b2Body.b2_staticBody ,fixDef);
 }

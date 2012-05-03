@@ -31,7 +31,8 @@ function addListen(world)//在世界中添加监听
 			if(flag_accelerate == 0)
 			{
 				vec_X = objectA.GetLinearVelocity().x;
-				vec_Y = objectA.GetLinearVelocity().y;				
+				vec_Y = objectA.GetLinearVelocity().y;	
+			//	alert("qian " + vec_X + " " + vec_Y);		
 				flag_accelerate = flag_accelerate + 1;
 			}		
 		}
@@ -59,6 +60,7 @@ function addListen(world)//在世界中添加监听
 			world.m_flags = 0;
 			world.e_locked = 0;
 			deleteOjectFromWorld(world,'accelerate');
+		//	alert("hou " + vec_X + " " + vec_Y);		
 			objectA.SetLinearVelocity(new b2Vec2(vec_X *3, vec_Y *3));
 			flag_accelerate = 0;
 		}
@@ -86,4 +88,9 @@ function ColliderJudge(object)
 	object.GetUserData() =='RollBall_4' ||
 	object.GetUserData() =='RollBall_5' )
 	return true;
+}
+function ResetTheNumber(accelerateReset, slowDownReset)
+{
+	flag_accelerate = accelerateReset;
+	flag_slowDown = slowDownReset;
 }
