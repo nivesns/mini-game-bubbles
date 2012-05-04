@@ -3,6 +3,7 @@ var globalNumberOfBall_PlayerA = 0;
 var globalColorFrame = 0;
 var globalCanChange = false;///现在是否可以颜色渐变
 var globalAddOneAffect = 0;//表示现在这个加1特效还能持续多久。
+var globalScoreOfPlayOne = 0, globalScoreOfPlayTwo = 0;
 /////////////////////////////////////////////////////////播放音乐   src表示的是音乐的路径
 function PlayMusic(src)
 {
@@ -121,9 +122,36 @@ function DrawRole(world, context, canvas)
 }
 
 ///////////////////////////////////////////////////绘制分数
+function HandleScore(context, playPositionBegin , playSize, score)
+{
+	var num1 = 0 , num2 = 0, num3 = 0, num4 = 0;
+	var numArray = new Array([4]);
+	numArray[0] = parseInt(score/1000);
+	numArray[1] = parseInt((score %1000)/100);
+	numArray[2] = parseInt((score %100)/10);
+	numArray[3]= parseInt(score%10);
+	
+	for(var i = 0 ; i < 4; i ++)
+	{
+		var path = "number/"+ numArray[i] + ".png";
+		DrawLayInSecene(context, path, playPositionBegin.x + 20 *i ,playPositionBegin.y , playSize.x, playSize.y);
+	}
+}
+
 function DrawScore(world, context, canvas)
 {
-	DrawLayInSecene(context, "number/1.png", 0, 0, 10,70);//数字 
+	///playOne 的起始位置为 70,25  size 15, 20,  playTwo 720, 20, size 10, 30
+	var playOnePositionBegin = new b2Vec2(65, 25);
+	var playOneSize = new b2Vec2(15,20);
+	
+	var playTwoPositionBegin = new b2Vec2(710, 25);
+	var playTwoSize = new b2Vec2(15,20);
+	
+	var middleOneScore = globalScoreOfPlayOne;
+	var middleTwoScore = globalScoreOfPlayTwo;
+	
+	HandleScore(context, playOnePositionBegin, playOneSize, middleOneScore);
+	HandleScore(context, playTwoPositionBegin, playTwoSize, middleTwoScore);	
 }
 /////////////////////////////////////////////////////根据时间来绘制球的颜色
 function DrawBallColor(context, position)
@@ -195,13 +223,22 @@ function DrawBody(world, context, canvas)
 		globalAddOneAffect--;
 	}
 	{
-		if(globalNumberOfBall_PlayerA == 5)
+		if(globalNumberOfBall_PlayerA >= 5)
 		{
 			//////进入下一关。
-			alert("可以进入下一关了");
+		//	alert("可以进入下一关了");
 		}
-		var path = "number/"+globalNumberOfBall_PlayerA + ".png";
+		var path = "number/"+globalNumberOfBall_PlayerA + ".png";//显式以完成几个球
 		DrawLayInSecene(context, path,6*30 ,0.7*30 , 20,30)
+	}
+	{
+		for(var i = 0 ; i < 5 - globalNumberOfBall_PlayerA;i++)
+		{
+			DrawLayInSecene(context, "images/ball.png",(i+6) *35, 20, 30,30);//还剩下几个球没完成
+		}
+	}
+	{
+		
 	}
 	
 }
@@ -475,9 +512,9 @@ function addMultipleObject(world, fixDef)
 		allBodyList = allBodyList.GetNext();
 	}
 	
-	addObjectToWorld(world,13,11.5,'accelerate',b2Body.b2_staticBody,fixDef);//添加加上的物体
+	addObjectToWorld(world,15,10,'accelerate',b2Body.b2_staticBody,fixDef);//添加加上的物体
 			
-	addObjectToWorld(world,15,10,'slowDown',b2Body.b2_staticBody,fixDef);//添加爆炸的物体
+	addObjectToWorld(world,11,13,'slowDown',b2Body.b2_staticBody,fixDef);//添加爆炸的物体
 	
 	
 	
@@ -494,17 +531,20 @@ function DeleteActionStaticObject(world, fixDef)
 	if(JudgeStatic(dynamicObject) && clickRollBallStation == 0)
 	{
 		////////////////////////////////////////////////////////////在该地方加上消失之前的一些特效。
+		
 		position = dynamicObject.GetPosition();
-		if(position.x > 18 && position.x < 20 && position.y < 13 && position.y > 11)
+		if(position.x > 26 && position.x < 27 )
 		{
+		//	alert(position.x *30 + " "+ position.y*30);
 			globalAddOneAffect = 60;//定义加1动画的时间
 			globalNumberOfBall_PlayerA = globalNumberOfBall_PlayerA + 1;//表示进球数量增加
-			
+			PlayMusic('musicSrc/gotit.mp3');
 			///说明调入了正确的坑内
 		}
 		else
 		{
 			//调入的坑不正确
+		//	alert(position.x  + " "+ position.y);
 		//	alert("error");
 		}
 		
@@ -542,5 +582,5 @@ function AddInitBall(world, fixDef)
 //////////////////////////////////////////////////////////////////////////////设置一个对象的速度
 function SetObjectSpeed(object, i)
 {
-	object.SetLinearVelocity(new b2Vec2(0, i/20));
+	object.SetLinearVelocity(new b2Vec2(0, i/17));
 }
