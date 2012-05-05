@@ -2,6 +2,7 @@ var vec_X = 0;
 var vec_Y = 0;
 var flag_accelerate = 0;
 var flag_slowDown = 0;
+var globalTimes = 3;
 function addListen(world)//在世界中添加监听 
 {
 	var i = 1;
@@ -26,7 +27,7 @@ function addListen(world)//在世界中添加监听
 	{
 		var objectA = contact.GetFixtureA().GetBody();
 		var objectB = contact.GetFixtureB().GetBody();
-		if(ColliderJudge(objectA) && objectB.GetUserData() == 'accelerate')//加速度的情况
+		if(ColliderJudge(objectA) &&JudgementSubstring( objectB.GetUserData(),  'accelerate'))//加速度的情况
 		{
 			if(flag_accelerate == 0)
 			{
@@ -36,7 +37,7 @@ function addListen(world)//在世界中添加监听
 				flag_accelerate = flag_accelerate + 1;
 			}		
 		}
-		if(ColliderJudge(objectA) && objectB.GetUserData() == 'slowDown')//减速的情况
+		if(ColliderJudge(objectA) && JudgementSubstring(objectB.GetUserData() , 'slowDown'))//减速的情况
 		{
 			if(flag_slowDown == 0)
 			{
@@ -54,23 +55,23 @@ function addListen(world)//在世界中添加监听
 		var middle_locked = world.e_locked;
 		var objectA = contact.GetFixtureA().GetBody();
 		var objectB = contact.GetFixtureB().GetBody();
-		if(ColliderJudge(objectA)&& objectB.GetUserData() == 'accelerate')//该情况是加速的情况
+		if(ColliderJudge(objectA)&& JudgementSubstring( objectB.GetUserData(),  'accelerate'))//该情况是加速的情况
 		{
 			
 			world.m_flags = 0;
 			world.e_locked = 0;
-			deleteOjectFromWorld(world,'accelerate');
+			deleteOjectFromWorld(world,objectB.GetUserData());
 		//	alert("hou " + vec_X + " " + vec_Y);		
-			objectA.SetLinearVelocity(new b2Vec2(vec_X *3, vec_Y *3));
+			objectA.SetLinearVelocity(new b2Vec2(vec_X *globalTimes, vec_Y *globalTimes));
 			flag_accelerate = 0;
 		}
-		if(ColliderJudge(objectA)&& objectB.GetUserData() == 'slowDown')//该情况是减速的情况
+		if(ColliderJudge(objectA)&& JudgementSubstring(objectB.GetUserData() , 'slowDown'))//该情况是减速的情况
 		{
 			
 			world.m_flags = 0;
 			world.e_locked = 0;
-			deleteOjectFromWorld(world,'slowDown');
-			objectA.SetLinearVelocity(new b2Vec2(vec_X/3, vec_Y/3 ));
+			deleteOjectFromWorld(world,objectB.GetUserData());
+			objectA.SetLinearVelocity(new b2Vec2(vec_X/globalTimes, vec_Y/globalTimes ));
 			flag_slowDown = 0;
 		}
 	//	world.e_locked = middle_Locked;
@@ -81,12 +82,7 @@ function addListen(world)//在世界中添加监听
 ////////////////////////////////////////////////////////////////////////进入判断条件的函数
 function ColliderJudge(object)
 {
-	if(object.GetUserData() =='RollBall' ||
-	object.GetUserData() =='RollBall_1' ||
-	object.GetUserData() =='RollBall_2' ||
-	object.GetUserData() =='RollBall_3' ||
-	object.GetUserData() =='RollBall_4' ||
-	object.GetUserData() =='RollBall_5' )
+	if(JudgementSubstring(object.GetUserData() , 'RollBall'))
 	return true;
 }
 function ResetTheNumber(accelerateReset, slowDownReset)

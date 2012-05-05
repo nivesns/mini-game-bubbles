@@ -1,14 +1,33 @@
-
-var globalNumberOfBall_PlayerA = 0;
-var globalColorFrame = 0;
-var globalCanChange = false;///现在是否可以颜色渐变
+var globalAccountOfBall = 6;///共需要运输的球的个数
+var globalNumberOfBall_PlayerA = 0;//目前进了几个球playOne;
+var globalColorFrame = 0;//表示颜色变化的帧是多少
+var globalCanChange = false;///现在是否可以颜色渐变b
 var globalAddOneAffect = 0;//表示现在这个加1特效还能持续多久。
-var globalScoreOfPlayOne = 0, globalScoreOfPlayTwo = 0;
+var globalScoreOfPlayOne = 0, globalScoreOfPlayTwo = 0;//表示playOne和playTwo的分数
+var globalTime = 0;//用来记录时间
+var globalAllTime =  60 * 180;//记录总共需要的时间
+////////////////////////////////////////////////////////////////////////////判断字符串中是否含有某个子串
+function JudgementSubstring(string ,subString)
+{	
+	if(string == null)
+	{
+		return false;
+	}
+	if(string.search(subString) >= 0)
+	{	
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 /////////////////////////////////////////////////////////播放音乐   src表示的是音乐的路径
 function PlayMusic(src)
 {
 	var bgmusic = new Audio(src);
 	bgmusic.play();
+	
 }
 
 /////////////////////////////////////////////////////////添加物体到世界中去,
@@ -87,8 +106,36 @@ function DrowWorldEveryObject(world, context, canvas)
 	DrawBody(world, context, canvas);//画建立的有属性的物体
 	
 	
+	
+	if(globalTime > globalAllTime)///////////////////////////分钟
+	{
+		alert("over");
+	}
+	DrawTime(world, context, canvas);
+	globalTime = globalTime + 1;
 }
 
+///////////////////////////////////////////////////////绘制时间
+function DrawTime(world, context, canvas)
+{
+	var leftTime = globalAllTime - globalTime;
+	var leftSecond = leftTime /60;
+	var numArray = new Array([3]);
+	numArray[0] = parseInt(leftSecond /100);
+	numArray[1] = parseInt((leftSecond - numArray[0] *100) /10);
+	numArray[2] = parseInt(leftSecond % 10);
+	
+	for(var i = 0 ; i < 3; i ++)
+	{
+		
+		var path = "number/"+ numArray[i] + ".png";
+		if(numArray[i] < 0)
+		{
+			path = "number/" + 0 + ".png";
+		}
+		DrawLayInSecene(context, path,390 + i * 15, 25, 15, 20);
+	}
+}
 ////////////////////////////////////////////////////绘制云 
 var cloudAnimationBegin = -800;
 function DrawCloud(world, context, canvas)
@@ -124,7 +171,7 @@ function DrawRole(world, context, canvas)
 ///////////////////////////////////////////////////绘制分数
 function HandleScore(context, playPositionBegin , playSize, score)
 {
-	var num1 = 0 , num2 = 0, num3 = 0, num4 = 0;
+	
 	var numArray = new Array([4]);
 	numArray[0] = parseInt(score/1000);
 	numArray[1] = parseInt((score %1000)/100);
@@ -168,8 +215,21 @@ function DrawBallColor(context, position)
 		globalColorFrame = 0;
 	}
 }
-///////////////////////////////////////////////////绘制Body样的东西
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////主要绘制道具
+function DrawHelpTool(context , object)
+{
+	if(JudgementSubstring(object.GetUserData(),'accelerate'))
+	{
+		var position = object.GetPosition();
+		DrawLayInSecene(context, "images/accelerate.png", (position.x-0.5)*30,(position.y-0.5)*30, 30,30);
+	}
+	if(JudgementSubstring(object.GetUserData(),'slowDown'))
+	{
+		var position = object.GetPosition();
+		DrawLayInSecene(context, "images/slowDown.png", (position.x-0.5)*30,(position.y-0.5)*30, 30,30);
+	}
+} 
+///////////////////////////////////////////////////////////绘制Body样的东西
 function DrawBody(world, context, canvas)
 {
 	var allBody = world.GetBodyList();
@@ -187,12 +247,7 @@ function DrawBody(world, context, canvas)
 				globalColorFrame =  globalColorFrame + 1;
 			}
 		}
-		if(allBody.GetUserData() == 'accelerate')
-		{
-			var position = allBody.GetPosition();
-					
-			DrawLayInSecene(context, "images/accelerate.png", (position.x-0.5)*30,(position.y-0.5)*30, 30,30);//playTwo
-		}
+		DrawHelpTool(context, allBody);
 		if(allBody.GetUserData() == 'Return')
 		{
 			var position = allBody.GetPosition();
@@ -208,13 +263,7 @@ function DrawBody(world, context, canvas)
 			DrawLayInSecene(context, "images/ball.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 30,30);//画还有几个球的图标
 		}
 		
-		if(allBody.GetUserData() == 'slowDown')
-		{
-			var position = allBody.GetPosition();
-			
-			DrawLayInSecene(context, "images/slowDown.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 30,30);//return 图标
-			
-		}
+		
 		allBody = allBody.GetNext();
 	}
 	if(globalAddOneAffect > 0)
@@ -223,23 +272,22 @@ function DrawBody(world, context, canvas)
 		globalAddOneAffect--;
 	}
 	{
-		if(globalNumberOfBall_PlayerA >= 5)
+		if(globalNumberOfBall_PlayerA >= globalAccountOfBall)
 		{
 			//////进入下一关。
 		//	alert("可以进入下一关了");
+			alert("enter the next scene");
 		}
 		var path = "number/"+globalNumberOfBall_PlayerA + ".png";//显式以完成几个球
 		DrawLayInSecene(context, path,6*30 ,0.7*30 , 20,30)
 	}
 	{
-		for(var i = 0 ; i < 5 - globalNumberOfBall_PlayerA;i++)
+		for(var i = 0 ; i < globalAccountOfBall -1 - globalNumberOfBall_PlayerA;i++)
 		{
 			DrawLayInSecene(context, "images/ball.png",(i+6) *35, 20, 30,30);//还剩下几个球没完成
 		}
 	}
-	{
-		
-	}
+	
 	
 }
 /////////////////////////////////////////////////////返回场景中动态物体的个数
@@ -499,7 +547,7 @@ function addMultipleObject(world, fixDef)
 	var allBodyList = world.GetBodyList();
 	while(allBodyList)
 	{
-		if(allBodyList.GetUserData() == "accelerate" ||allBodyList.GetUserData() == "slowDown")
+		if(JudgementSubstring(allBodyList.GetUserData(),'accelerate')  ||JudgementSubstring(allBodyList.GetUserData(),'slowDown'))
 		{
 			var fixList = allBodyList.GetFixtureList();
 			while(fixList)
@@ -511,15 +559,48 @@ function addMultipleObject(world, fixDef)
 		}
 		allBodyList = allBodyList.GetNext();
 	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////所有提添加物体都在这添加
 	
-	addObjectToWorld(world,15,10,'accelerate',b2Body.b2_staticBody,fixDef);//添加加上的物体
-			
-	addObjectToWorld(world,11,13,'slowDown',b2Body.b2_staticBody,fixDef);//添加爆炸的物体
+	ChangeHelperAccordingNum(world, fixDef);
+	
 	
 	
 	
 }
-
+//////////////////////////////////////////////////////////////////////////////////根据不同的进球个数，道具的变化
+function ChangeHelperAccordingNum(world, fixDef)//////////////////////////////////注意在同一个case   break之间不能有同名的accelerate和slowDown.起名都必须是accelerate1,accelerate2,..和slowDown1，slowDown2...这样的形式
+{
+	switch(globalNumberOfBall_PlayerA)
+	{
+		case 0://没进球的情况
+			addObjectToWorld(world,15,10,'accelerate',b2Body.b2_staticBody,fixDef);//添加加速的道具在(15,10)这个坐标上	
+			addObjectToWorld(world,11,13,'accelerate1',b2Body.b2_staticBody,fixDef);//添加减速的道具在(11,13)这个坐标上
+			break;
+		case 1://进1个的情况
+			addObjectToWorld(world,15,10,'slowDown',b2Body.b2_staticBody,fixDef);//添加加速的道具在(15,10)这个坐标上	
+			addObjectToWorld(world,11,13,'slowDown1',b2Body.b2_staticBody,fixDef);//添加减速的道具在(11,13)这个坐标上
+			break;
+		case 2://进2个的情况
+			addObjectToWorld(world,15,10,'accelerate',b2Body.b2_staticBody,fixDef);//添加加速的道具在(15,10)这个坐标上	
+			addObjectToWorld(world,11,13,'slowDown',b2Body.b2_staticBody,fixDef);//添加减速的道具在(11,13)这个坐标上
+			break;
+		case 3://进3个的情况
+			addObjectToWorld(world,15,10,'accelerate',b2Body.b2_staticBody,fixDef);//添加加速的道具在(15,10)这个坐标上	
+			addObjectToWorld(world,11,13,'slowDown',b2Body.b2_staticBody,fixDef);//添加减速的道具在(11,13)这个坐标上
+			break;
+		case 4://进4个的情况
+			addObjectToWorld(world,15,10,'accelerate',b2Body.b2_staticBody,fixDef);//添加加速的道具在(15,10)这个坐标上	
+			addObjectToWorld(world,11,13,'slowDown',b2Body.b2_staticBody,fixDef);//添加减速的道具在(11,13)这个坐标上
+			break;
+		case 5://进5个的情况
+			addObjectToWorld(world,15,10,'accelerate',b2Body.b2_staticBody,fixDef);//添加加速的道具在(15,10)这个坐标上	
+			addObjectToWorld(world,11,13,'slowDown',b2Body.b2_staticBody,fixDef);//添加减速的道具在(11,13)这个坐标上
+			break;
+		default://其他情况，不再讨论
+			break;
+		
+	}
+}
 /////////////////////////////////////////////////////////////////////////////////删除场景中动态静止的物体
 function DeleteActionStaticObject(world, fixDef)
 {
@@ -577,7 +658,7 @@ function GetDynamicObjectInScene(world)
 ///////////////////////////////////////////////////////////////////////////////添加初始化时的一个球
 function AddInitBall(world, fixDef)
 {
-	addObjectToWorld(world, 5, 12.32, 'RollBall',b2Body.b2_staticBody ,fixDef);
+	addObjectToWorld(world, 5, 12.32, 'RollBall',b2Body.b2_staticBody ,fixDef);	
 }
 //////////////////////////////////////////////////////////////////////////////设置一个对象的速度
 function SetObjectSpeed(object, i)
