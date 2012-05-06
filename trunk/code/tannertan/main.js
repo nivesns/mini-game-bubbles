@@ -1,3 +1,5 @@
+var currentScene = 3;
+
 function StartFuction(canvas , context)
 {
 	PlayMusic('musicSrc/bg.mp3');
@@ -89,7 +91,8 @@ function StartFuction(canvas , context)
          holderDef.position.Set(0, 0);
          var holder = world.CreateBody(holderDef);
         
-	   for (var i = 0; i < a1.length-1; i++){	  
+	   /////////////////////////////////////////////////////////////////////////////////////赛道
+	  for (var i = 0; i < a1.length-1; i++){	  
 		   var fixDef1 = new b2FixtureDef;
        	   fixDef1.density = 10.0;
            fixDef1.friction = 0.1;
@@ -102,52 +105,6 @@ function StartFuction(canvas , context)
 			 holder.CreateFixture(fixDef1);
         // holder.CreateFixture(fixDef3);		
 		}
-	   var fixDef3 = new b2FixtureDef;
-       fixDef3.density = 10.0;
-        fixDef3.friction = 0.1;
-        fixDef3.restitution =0;
-		fixDef3.shape = new b2PolygonShape;
-		var aa = genVec2Array();
-		aa.push(new b2Vec2(9.7, 2));
-		aa.push(new b2Vec2(0, 2));
-		fixDef3.shape.SetAsArray([new b2Vec2(0, 14),new b2Vec2(0.2, 13.8),new b2Vec2(0.2, 16),new b2Vec2(0, 16)]);
-		
-		
-		var fixDef4 = new b2FixtureDef;
-       	fixDef4.density = 10.0;
-        fixDef4.friction = 0.1;
-        fixDef4.restitution =0;
-		fixDef4.shape = new b2PolygonShape;
-		fixDef4.shape.SetAsArray([new b2Vec2(5, -2.5),new b2Vec2(25, -9),new b2Vec2(25, 2),new b2Vec2(0, 2)]);
-		
-
-
-         var popy = world.CreateBody(bodyDef);
-		 popy.SetBullet(false);
-         popy.CreateFixture(fixDef);
-
-         
-         var v0 = new b2Vec2(2, 4);
-		 var v1 = new b2Vec2(4, 2);
-		 var v2 = new b2Vec2(6, 4);
-		 var v3 = new b2Vec2(7, 8);
-		 var edge = new b2EdgeShape(v1,v2);
-		//edge.Set(v1, v2);
-		 edge.m_hasVertex0 = true;
-		 edge.m_hasVertex3 = true;
-         edge.m_vertex0 = v0;
-		 edge.m_vertex3 = v3;
-		var edgeDef = new b2BodyDef;
-         edgeDef.type = b2Body.b2_dynamicBody;
-         edgeDef.position.Set(3, 6);
-         var edger = world.CreateBody(edgeDef);
-		 var fixDef2 = new b2FixtureDef;
-         fixDef2.density = 10.0;
-         fixDef2.friction = 0.5;
-         fixDef2.restitution =1;
-
-		// fixDef2.shape = edge;
-		 fixDef2.shape = new b2PolygonShape;
 		 //fixDef2.shape.SetAsBox(15, 2);
 		// alert(fixDef2.shape.m_hasVertex0);
         // edger.CreateFixture(fixDef2);
@@ -172,7 +129,7 @@ function StartFuction(canvas , context)
 			
 			while(allBodyList)
 			{
-				if( allBodyList.GetType() == b2Body.b2_dynamicBody)
+				if( allBodyList.GetType() == b2Body.b2_dynamicBody )
 				{
 					if(allBodyList.GetUserData() == null || allBodyList.GetUserData() == 'RollBall')
 					{
@@ -189,45 +146,21 @@ function StartFuction(canvas , context)
 			}
 		 }
 		
-		//添加碰撞物体
-		////////////////////////////////////////////////////添加该物体总是不变，只运行一次。
+		///添加场景二总物体
+		if(currentScene == 3)
 		{
-			addObjectToWorld(world, 1, 480/30-1,'Return' ,b2Body.b2_staticBody, fixDef); //添加按钮
-		}  
+			LoadSceneThree(world, context, canvas, fixDef);
+		}
+		if(currentScene == 2)
+		{
+				//
+		}
+		if(currentScene == 1)
+		{
+			//
+			LoadSceneOne(world, context, canvas, fixDef);
+		}
 		
-		/////////////////////////////////////////////////////添加物体每次进行测试都要重新绘制的图形
-		{
-			
-			addMultipleObject(world, fixDef);
-					
-		}
-		///////////////////////////////////////////////////////添加五个球 报废，现在只能添加一个球，郁闷
-		{
-		//	ClickReturnRecover(world, fixDef);	
-		    AddInitBall(world, fixDef);
-		
-		}
-		/////////////////////////////////////////////////////////////鼠标消息
-	
-		canvas.onmousedown = function(ev)
-		{	
-			MouseClickDownRollBall(ev, world, context, canvas, fixDef);	
-			
-			MouseClickDownReturn(ev, world, context, canvas, fixDef);	
-			
-		}
-        canvas.onmouseup = function(ev)
-		{	
-			MouseClickUpRollBall(ev, world, context, canvas, fixDef);
-			
-			MouseClickUpReturn(ev, world, context, canvas, fixDef);	
-		}
-		canvas.onmousemove = function(ev)
-		{
-			MouseMoveRollBall(ev, world, context, canvas, fixDef);
-			
-			MouseMoveReturn(ev, world, context, canvas, fixDef);
-		}
 		
 		////////////////////////////////////////////////////添加四周的围墙，以致求不会掉出该场景
 		{
@@ -246,7 +179,61 @@ function StartFuction(canvas , context)
 			wallFixtureDef.shape.SetAsArray([new b2Vec2(800/30-0.01,0), new b2Vec2(800/30,0), new b2Vec2(800/30,480/30), new b2Vec2(800/30-0.01,480/30)]);//rightWall
 			addObjectToWorld(world,0,0,'MiddleWall',b2Body.b2_staticBody, wallFixtureDef);
 		}
-		  
+		  /////////////////////////////////////////////////////////////鼠标消息
+	
+		canvas.onmousedown = function(ev)
+		{	
+			if(currentScene == 3)
+			{
+				MouseClickDownRollBall(ev, world, context, canvas, fixDef);	
+			
+				MouseClickDownReturn(ev, world, context, canvas, fixDef);	
+			}
+			if(currentScene == 2)
+			{
+				//
+			}
+			if(currentScene == 1)
+			{
+				//
+			}
+			
+		}
+        canvas.onmouseup = function(ev)
+		{	
+			if(currentScene == 3)
+			{
+				MouseClickUpRollBall(ev, world, context, canvas, fixDef);
+			
+				MouseClickUpReturn(ev, world, context, canvas, fixDef);	
+			}
+			if(currentScene == 2)
+			{
+				//
+			}
+			if(currentScene == 1)
+			{
+				//
+			}
+		}
+		canvas.onmousemove = function(ev)
+		{
+			if(currentScene == 3)
+			{
+				MouseMoveRollBall(ev, world, context, canvas, fixDef);
+			
+				MouseMoveReturn(ev, world, context, canvas, fixDef);
+			}
+			if(currentScene == 2)
+			{
+				//
+			}
+			if(currentScene == 1)
+			{
+				//
+			}
+		}
+		
          ///////////////////////////////////////////////每一帧都要操作的函数update
          function update() {
             world.Step(1 /24, 10, 10);
@@ -263,10 +250,22 @@ function StartFuction(canvas , context)
     		canvasHeight = parseInt(canvas.height);
 			context.clearRect(0, 0, canvasWidth, canvasHeight);
 			
-			DrowWorldEveryObject(world, context, canvas);
-			
-			
-			DeleteActionStaticObject(world, fixDef);	
+			if(currentScene == 3)
+			{
+				DrowWorldEveryObject(world, context, canvas);
+				DeleteActionStaticObject(world, fixDef);	
+			}
+			if(currentScene == 2)
+			{
+				//
+				DrawTwoSceneEveryObject(world, context, canvas);
+			}
+			if(currentScene == 1)
+			{
+				//
+				DrawOneSceneEveryObject(world, context, canvas);
+				
+			}
 			
 		}
 }

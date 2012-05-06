@@ -9,6 +9,7 @@ var globalAllTime =  60 * 180;//记录总共需要的时间
 ////////////////////////////////////////////////////////////////////////////判断字符串中是否含有某个子串
 function JudgementSubstring(string ,subString)
 {	
+	
 	if(string == null)
 	{
 		return false;
@@ -497,6 +498,7 @@ function MouseClickUpReturn(ev, world, context, canvas, fixDef)
 	if(clickReturnReturn == 1)
 	{
 	//	ClickReturnRecover(world, fixDef);  //报废，不用了， 现在的返回消息没有了
+		ConnectDatabase();
 		clickReturnReturn = 0;
 	}
 }
@@ -577,8 +579,8 @@ function ChangeHelperAccordingNum(world, fixDef)////////////////////////////////
 			addObjectToWorld(world,11,13,'accelerate1',b2Body.b2_staticBody,fixDef);//添加减速的道具在(11,13)这个坐标上
 			break;
 		case 1://进1个的情况
-			addObjectToWorld(world,15,10,'slowDown',b2Body.b2_staticBody,fixDef);//添加加速的道具在(15,10)这个坐标上	
-			addObjectToWorld(world,11,13,'slowDown1',b2Body.b2_staticBody,fixDef);//添加减速的道具在(11,13)这个坐标上
+			addObjectToWorld(world,15,10,'accelerate',b2Body.b2_staticBody,fixDef);//添加加速的道具在(15,10)这个坐标上	
+			addObjectToWorld(world,12,13,'accelerate1',b2Body.b2_staticBody,fixDef);//添加减速的道具在(11,13)这个坐标上
 			break;
 		case 2://进2个的情况
 			addObjectToWorld(world,15,10,'accelerate',b2Body.b2_staticBody,fixDef);//添加加速的道具在(15,10)这个坐标上	
