@@ -248,7 +248,7 @@ function StartFuction(canvas , context)
 			
 			canvasWidth = parseInt(canvas.width);
     		canvasHeight = parseInt(canvas.height);
-			context.clearRect(0, 0, canvasWidth, canvasHeight);
+	//		context.clearRect(0, 0, canvasWidth, canvasHeight);
 			
 			if(currentScene == 3)
 			{

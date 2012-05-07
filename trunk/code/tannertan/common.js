@@ -90,10 +90,15 @@ function DrawLayInSecene(context ,src, position_x, position_y,width, height)
 	image.src = src;
 	context.drawImage(image, position_x, position_y, width, height);
 }
-
+function DrawBackground(world, context, canvas, src)
+{
+	DrawLayInSecene(context ,src, 0, 0,800, 480);	
+}
 ///////////////////////////////////////////////////////处理每一帧都处理的东西。
 function DrowWorldEveryObject(world, context, canvas)
 {
+	DrawBackground(world, context, canvas, "images/background.png");
+	
 	DrawCloud(world, context, canvas);///画云
 	
 	DrawTrack(world, context, canvas);//画轨道
