@@ -1,6 +1,19 @@
 function LoadSceneOne(world, context, canvas, fixDef)
 {
+	var fixDef1 = new b2FixtureDef;
+    fixDef1.density = 10.0;
+    fixDef1.friction = 0.1;
+    fixDef1.restitution =0;
+	fixDef1.shape = new b2PolygonShape;
+	fixDef1.shape.SetAsArray([new b2Vec2(0,0),new b2Vec2(2,0),new b2Vec2(2,1),new b2Vec2(0,1)]);
+	addCubeToWorld(world,9,10 ,'sceneOneLogin', b2Body.b2_staticBody, fixDef1);
+	addCubeToWorld(world,15,10 ,'sceneOneRegister', b2Body.b2_staticBody, fixDef1);
 	
+	addObjectToWorld(world, 800/30 - 3 ,1, "sceneOneClose", b2Body.b2_staticBody, fixDef);
+	
+	addObjectToWorld(world, 2, 480/30 -2, "sceneOneBgMusic", b2Body.b2_staticBody, fixDef);
+	
+	addObjectToWorld(world, 800/30 - 2, 480/30 -2, "sceneOneSetup", b2Body.b2_staticBody, fixDef);
 }
 function LoadSceneTwo(world, context, canvas, fixDef)
 {
@@ -38,4 +51,15 @@ function DeleteScenetTwo(world)
 function DeleteSceneThree(world)
 {
 	
+}
+function  addCubeToWorld(world, position_x, position_y, userdata, type,  fixDef)
+{
+	var defBody = new b2BodyDef;//定义 b2BodyDef;
+	defBody.userData = userdata;
+	
+	defBody.type = type;
+	defBody.position.Set(position_x,position_y);
+	var commonBody = world.CreateBody(defBody);// b2Body;
+	
+	var fix = commonBody.CreateFixture(fixDef);//b2Fxiture		
 }

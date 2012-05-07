@@ -1,6 +1,6 @@
 function ConnectDatabase()
 {
-	var db_bbs
+	var db_bbs;
 	var fileHead = location.href;
 	fileHead = fileHead.substring(8, fileHead.length);
 	fileHead = fileHead.substring(0, fileHead.lastIndexOf('/'));
