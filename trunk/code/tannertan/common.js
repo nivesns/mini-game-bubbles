@@ -282,7 +282,7 @@ function DrawBody(world, context, canvas)
 		{
 			//////进入下一关。
 		//	alert("可以进入下一关了");
-			alert("enter the next scene");
+			alert("congratulate you finsih");
 		}
 		var path = "number/"+globalNumberOfBall_PlayerA + ".png";//显式以完成几个球
 		DrawLayInSecene(context, path,6*30 ,0.7*30 , 20,30)
@@ -503,7 +503,11 @@ function MouseClickUpReturn(ev, world, context, canvas, fixDef)
 	if(clickReturnReturn == 1)
 	{
 	//	ClickReturnRecover(world, fixDef);  //报废，不用了， 现在的返回消息没有了
-		ConnectDatabase();
+	//	ConnectDatabase();
+		ChangeScene(1, world, context, canvas, fixDef);//点击返回按钮返回到场景一
+		//重置所有东西
+		globalNumberOfBall_PlayerA = 0;
+		globalTime = 0;
 		clickReturnReturn = 0;
 	}
 }

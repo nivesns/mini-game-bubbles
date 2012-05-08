@@ -195,7 +195,7 @@ function StartFuction(canvas , context)
 			}
 			if(currentScene == 1)
 			{
-				//
+				SceneOneClickDown(ev, world, context, canvas, fixDef);
 			}
 			
 		}
@@ -214,6 +214,7 @@ function StartFuction(canvas , context)
 			if(currentScene == 1)
 			{
 				//
+				SceneOneClickUp(ev, world, context, canvas, fixDef)
 			}
 		}
 		canvas.onmousemove = function(ev)
@@ -231,6 +232,7 @@ function StartFuction(canvas , context)
 			if(currentScene == 1)
 			{
 				//
+				SceneOneMove(ev, world, context, canvas, fixDef)
 			}
 		}
 		
@@ -268,4 +270,21 @@ function StartFuction(canvas , context)
 			}
 			
 		}
+}
+function ChangeScene(change, world, context, canvas, fixDef)
+{
+	currentScene = change;
+	if(currentScene == 1)
+	{
+		LoadSceneOne(world, context, canvas, fixDef);
+	}
+	if(currentScene == 2)
+	{
+		LoadSceneTwo(world, context, canvas, fixDef);
+	}
+	if(currentScene == 3)
+	{
+		LoadSceneThree(world, context, canvas, fixDef);
+	}
+	
 }
