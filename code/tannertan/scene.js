@@ -1,5 +1,6 @@
 function LoadSceneOne(world, context, canvas, fixDef)
 {
+	DeleteAllObjectInScene(world);
 	var fixDef1 = new b2FixtureDef;
     fixDef1.density = 10.0;
     fixDef1.friction = 0.1;
@@ -21,6 +22,7 @@ function LoadSceneTwo(world, context, canvas, fixDef)
 }
 function LoadSceneThree(world, context, canvas, fixDef)
 {
+	DeleteAllObjectInScene(world);
 	//添加碰撞物体
 		////////////////////////////////////////////////////添加该物体总是不变，只运行一次。
 		{
@@ -40,18 +42,30 @@ function LoadSceneThree(world, context, canvas, fixDef)
 		
 		}
 }
-function DeleteSceneOne(world)
+function DeleteAllObjectInScene(world)
 {
+	var allBodyList = world.GetBodyList();
+	while(allBodyList)
+	{
+		if(JudgementSubstring(allBodyList.GetUserData(),'accelerate')  ||JudgementSubstring(allBodyList.GetUserData(),'slowDown') ||//场景三的物体
+		JudgementSubstring(allBodyList.GetUserData(),'RollBall')||JudgementSubstring(allBodyList.GetUserData(),'Return')||//场景三的物体
+		JudgementSubstring(allBodyList.GetUserData(),'sceneOne')||//场景一的物体,场景二设置好了的话，还可以添加场景二的物体
+		JudgementSubstring(allBodyList.GetUserData(),'sceneTwo')//后面可能会用，所以现在加上算了
+		)
+		{
+			var fixList = allBodyList.GetFixtureList();
+			while(fixList)
+			{
+				allBodyList.DestroyFixture(fixList);
+				fixList = fixList.GetNext();
+			}
+			world.DestroyBody(allBodyList);
+		}
+		allBodyList = allBodyList.GetNext();
+	}
 //	deleteOjectFromWorld(world, ""); 
 }
-function DeleteScenetTwo(world)
-{
-	
-}
-function DeleteSceneThree(world)
-{
-	
-}
+
 function  addCubeToWorld(world, position_x, position_y, userdata, type,  fixDef)
 {
 	var defBody = new b2BodyDef;//定义 b2BodyDef;
