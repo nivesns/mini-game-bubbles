@@ -6,9 +6,14 @@
 </head>
 <body>
 <center>
+
   <canvas id="canvas" width="800" height="480" style=" border:#000 1px solid;  background:url(images/background.png)"></canvas>
   <canvas id="canvas2" width="64" height="48" style=" border:#000 1px solid;"></canvas>
   <textarea rows="50" cols="100" id="txtCurRecord"></textarea>
+  
+  <div id="my div">........................</div>
+  
+  
 </center>
 </body>
 <script type="text/javascript" src="Box2dWeb-2.1.a.3.js"></script>
@@ -103,9 +108,17 @@
 	  
 	var canvas = document.getElementById("canvas");
 	var context = document.getElementById ("canvas").getContext("2d") ;
-	StartFuction(canvas,  context);
+	
+	
+	////添加
+	context.font ="40pt Calibri";
+	context.fillStyle = "#0000ff";
+	context.fillText("文字测试", 50,150);
+	////
+//	StartFuction(canvas,  context);
 	
 
 	
     </script>
+    
 </html>

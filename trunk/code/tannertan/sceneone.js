@@ -64,7 +64,7 @@ function SceneOneClickUp(ev, world, context, canvas, fixDef)
 			ChangeScene(3, world, context, canvas, fixDef);
 			break;
 			case 2:
-			window.open('baidu.htm');
+			window.open('register.html');
 			break;
 			case 3:
 			alert("close");
