@@ -8,6 +8,7 @@ function LoadSceneOne(world, context, canvas, fixDef)
 	fixDef1.shape = new b2PolygonShape;
 	fixDef1.shape.SetAsArray([new b2Vec2(0,0),new b2Vec2(2,0),new b2Vec2(2,1),new b2Vec2(0,1)]);
 	addCubeToWorld(world,9,10 ,'sceneOneLogin', b2Body.b2_staticBody, fixDef1);
+	
 	addCubeToWorld(world,15,10 ,'sceneOneRegister', b2Body.b2_staticBody, fixDef1);
 	
 	addObjectToWorld(world, 800/30 - 3 ,1, "sceneOneClose", b2Body.b2_staticBody, fixDef);
@@ -15,6 +16,17 @@ function LoadSceneOne(world, context, canvas, fixDef)
 	addObjectToWorld(world, 2, 480/30 -2, "sceneOneBgMusic", b2Body.b2_staticBody, fixDef);
 	
 	addObjectToWorld(world, 800/30 - 2, 480/30 -2, "sceneOneSetup", b2Body.b2_staticBody, fixDef);
+	
+	var fixDef2 = new b2FixtureDef;
+	fixDef2.density = 10.0;
+	fixDef2.friction = 0.1;
+	fixDef2.restitution = 0;
+	fixDef2.shape = new b2PolygonShape;
+	fixDef2.shape.SetAsArray([new b2Vec2(0,0),new b2Vec2(5,0),new b2Vec2(5,1),new b2Vec2(0,1)]);
+	
+	addCubeToWorld(world,12.1,7.1,'sceneOneId', b2Body.b2_staticBody, fixDef2);
+	
+	addCubeToWorld(world,12.1,8.6,'sceneOnePassword', b2Body.b2_staticBody, fixDef2);
 }
 function LoadSceneTwo(world, context, canvas, fixDef)
 {

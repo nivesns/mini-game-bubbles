@@ -1,4 +1,4 @@
-var currentScene = 3;
+var currentScene = 1;
 
 function StartFuction(canvas , context)
 {
@@ -32,16 +32,10 @@ function StartFuction(canvas , context)
 	  
 	function swtkeyboard(e){
          var evtobj=window.event? event : e //distinguish between IE's explicit event object (window.event) and Firefox's implicit.
+		 alert(evtobj);
          var unicode=evtobj.charCode? evtobj.charCode : evtobj.keyCode
          var actualkey=String.fromCharCode(unicode)
-         if (actualkey=="f")
-             push1();
-         if (actualkey=="i")
-             hit();
-         if (actualkey=="v")
-             speed();
-         if (actualkey=="t")
-             teleport();
+         
 	}
 	  
 	  
@@ -179,6 +173,32 @@ function StartFuction(canvas , context)
 			wallFixtureDef.shape.SetAsArray([new b2Vec2(800/30-0.01,0), new b2Vec2(800/30,0), new b2Vec2(800/30,480/30), new b2Vec2(800/30-0.01,480/30)]);//rightWall
 			addObjectToWorld(world,0,0,'MiddleWall',b2Body.b2_staticBody, wallFixtureDef);
 		}
+		///////////////////////////////////////////////////////////////键盘消息
+		document.onkeypress = function(ev)
+		{
+			if(currentScene == 1)
+			{
+				var uInt = ev.keyCode;
+			
+				var charValue= String.fromCharCode(uInt);
+			
+				GetInputString(world, context, canvas, charValue);
+				
+			}
+
+
+		}
+		document.onkeydown = function(ev)
+		{
+			if(currentScene == 1)
+			{
+				if(ev.keyCode == 8)
+				{
+					DeletInputString(world, context, canvas);
+				}
+			}
+		}
+		////////////////////////////////////////////////////////////////键盘消息结束
 		  /////////////////////////////////////////////////////////////鼠标消息
 	
 		canvas.onmousedown = function(ev)
@@ -201,7 +221,7 @@ function StartFuction(canvas , context)
 		}
         canvas.onmouseup = function(ev)
 		{	
-			if(currentScene == 3)
+			if(currentScene == 3 )
 			{
 				MouseClickUpRollBall(ev, world, context, canvas, fixDef);
 			
@@ -241,7 +261,7 @@ function StartFuction(canvas , context)
             world.Step(1 /24, 10, 10);
             world.DrawDebugData();			
             world.ClearForces();
-			document.onkeypress=swtkeyboard;
+		//	document.onkeypress=swtkeyboard;//键盘消息
 			RedrawWorld();
          };
 		 
@@ -250,7 +270,7 @@ function StartFuction(canvas , context)
 			
 			canvasWidth = parseInt(canvas.width);
     		canvasHeight = parseInt(canvas.height);
-	//		context.clearRect(0, 0, canvasWidth, canvasHeight);
+			context.clearRect(0, 0, canvasWidth, canvasHeight);
 			
 			if(currentScene == 3)
 			{

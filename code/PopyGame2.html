@@ -108,16 +108,18 @@
 	  
 	var canvas = document.getElementById("canvas");
 	var context = document.getElementById ("canvas").getContext("2d") ;
+
 	
+	context.strokeStyle = "#ff0000";//边框颜色
+	context.fillStyle = "#ff0000";//填充颜色
+//	context.fillRect(0,0,500,500);
+//	context.strokeRect(0,0,500,500);
 	
 	////添加
-	context.font ="40pt Calibri";
-	context.fillStyle = "#0000ff";
-	context.fillText("文字测试", 50,150);
-	////
-//	StartFuction(canvas,  context);
 	
-
+	////
+	StartFuction(canvas,  context);
+	
 	
     </script>
     
