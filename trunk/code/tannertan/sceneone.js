@@ -5,7 +5,7 @@ var whichTableBefore = 0;//记录上次whichTable的值;
 var inputStringId = "", inputStringPassword = "", cursorStringModelId = "", cursorStringModelPassword = "";//记录现在的字符串
 var cursorSpeed = 20;//设置光标多久闪一下;
 var countI = 0;//统计帧数;
-
+var musicBool = true;
 function DrawOneSceneEveryObject(world, context, canvas)
 {
 	DrawBackground(world, context, canvas, "SceneOne/bg.jpg");
@@ -17,14 +17,17 @@ function DrawOneSceneEveryObject(world, context, canvas)
 	id = getObjectFromWorld(world,"sceneOneId");	
 	password = getObjectFromWorld(world,"sceneOnePassword");	
 	
-	DrawLayInSecene(context ,"number/0.png", logVar.GetPosition().x*30 ,logVar.GetPosition().y*30,60, 30);
-	DrawLayInSecene(context ,"number/1.png", register.GetPosition().x*30, register.GetPosition().y*30,60, 30);
-	DrawLayInSecene(context ,"number/2.png", closeVar.GetPosition().x*30 - 30/2, closeVar.GetPosition().y*30-30/2,30, 30);
-	DrawLayInSecene(context ,"number/3.png", bgMusic.GetPosition().x*30-30/2, bgMusic.GetPosition().y*30-30/2,30, 30);
-	DrawLayInSecene(context ,"number/4.png", setUp.GetPosition().x*30-30/2, setUp.GetPosition().y*30-30/2,30, 30);
+	DrawLayInSecene(context ,"images/water.png", logVar.GetPosition().x*30 ,logVar.GetPosition().y*30,90, 30);
+	DrawLayInSecene(context ,"images/water.png", register.GetPosition().x*30, register.GetPosition().y*30,90, 30);
+	DrawLayInSecene(context ,"images/water.png", closeVar.GetPosition().x*30 - 30/2, closeVar.GetPosition().y*30-30/2,30, 30);
+	DrawLayInSecene(context ,"images/water.png", bgMusic.GetPosition().x*30-30/2, bgMusic.GetPosition().y*30-30/2,30, 30);
+	DrawLayInSecene(context ,"images/water.png", setUp.GetPosition().x*30-30/2, setUp.GetPosition().y*30-30/2,30, 30);
 //	DrawLayInSecene(context ,"images/water.png", id.GetPosition().x*30, id.GetPosition().y*30,170, 30);
 //	DrawLayInSecene(context ,"images/water.png", password.GetPosition().x*30, password.GetPosition().y*30,170, 30);
-	
+	if(!musicBool)
+	{
+		DrawLayInSecene(context ,"images/delete.png", bgMusic.GetPosition().x*30-30/2, bgMusic.GetPosition().y*30-30/2,30, 30);
+	}
 	
 	
 	//绘制字符
@@ -78,12 +81,12 @@ function GetPutDownObject(ev)
 {
 	if(logVar == null  || register == null || closeVar == null || bgMusic == null || setUp == null || id == null || password == null)
 		return 0;
-	if(	ev.offsetX > logVar.GetPosition().x*30 && ev.offsetX < logVar.GetPosition().x*30 + 60 &&//login
+	if(	ev.offsetX > logVar.GetPosition().x*30 && ev.offsetX < logVar.GetPosition().x*30 + 90 &&//login
 	ev.offsetY > logVar.GetPosition().y*30 && ev.offsetY < logVar.GetPosition().y*30  + 30)
 	{
 		return 1;
 	}
-	if(	ev.offsetX > register.GetPosition().x*30 && ev.offsetX < register.GetPosition().x*30 + 60 &&//register
+	if(	ev.offsetX > register.GetPosition().x*30 && ev.offsetX < register.GetPosition().x*30 + 90 &&//register
 	ev.offsetY > register.GetPosition().y*30 && ev.offsetY < register.GetPosition().y*30  + 30)
 	{
 		return 2;
@@ -137,7 +140,7 @@ function SceneOneClickUp(ev, world, context, canvas, fixDef)
 			break;
 			case 1:
 			ChangeScene(3, world, context, canvas, fixDef);
-			alert(inputStringId + " " + inputStringPassword);
+		//	alert(inputStringId + " " + inputStringPassword);
 			inputStringId = "";
 			inputStringPassword = "";
 			break;
@@ -148,7 +151,17 @@ function SceneOneClickUp(ev, world, context, canvas, fixDef)
 			alert("close");
 			break;
 			case 4:
-			alert("music");
+			{
+				musicBool = !musicBool;
+				if(musicBool)
+				{
+					playMusic();
+				}
+				else
+				{
+					pauseMusic();
+				}
+			}
 			break;
 			case 5:
 			alert("setup");

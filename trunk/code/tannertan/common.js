@@ -24,13 +24,20 @@ function JudgementSubstring(string ,subString)
 	}
 }
 /////////////////////////////////////////////////////////播放音乐   src表示的是音乐的路径
+var bgmusic ;
 function PlayMusic(src)
 {
-	var bgmusic = new Audio(src);
-	bgmusic.play();
-	
+	bgmusic = new Audio(src);
+	playMusic();
 }
-
+function playMusic()
+{
+	bgmusic.play();	
+}
+function pauseMusic()
+{
+	bgmusic.pause();
+}
 /////////////////////////////////////////////////////////添加物体到世界中去,
 function  addObjectToWorld(world, position_x ,position_y, userdata, type,  fixDef)
 {

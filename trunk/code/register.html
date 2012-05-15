@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head><script language="javascript" type="text/javascript">
+
+function JudgementPassword(password1, password2)
+{
+	if(password1 == password2)
+	{
+		return true;
+	}
+	alert("密码输入不一致");
+	return false;
+}
+function CheckEmail(email)
+{
+	
+	
+	var atPosition = email.indexOf("@");
+	var dotComPosition = email.indexOf(".com");
+	
+	if(atPosition > dotComPosition || dotComPosition < 0 || atPosition < 0 || dotComPosition != email.length - 4)
+	{
+		alert("邮箱输入错误");
+		return false;
+	}
+	else
+	{
+		return true;	
+	}
+	
+}
+
+function mycheck()
+{
+	var name = document.getElementById("username").value;
+	var password = document.getElementById("password").value;
+	var password2 = document.getElementById("password2").value;
+	var email = document.getElementById("email").value;
+	
+	if(JudgementPassword(password, password2) && CheckEmail(email))
+	{
+	/////do something to operator database;
+		alert("yes you are right");
+	}
+	else
+	{
+		//set the value;
+		alert("you are error");
+	}
+	
+	
+}
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>用户注册</title>
+<style type="text/css">
+<!--
+.STYLE1 {color: #FF0000}
+#form1 table tr td div {
+	color: #F00;
+}
+#form1 table tr td div {
+	color: #000;
+}
+-->
+</style>
+
+</head>
+
+<body>
+<form id="form1" >
+
+  <div align="center">
+    <table width="362" height="292" border="0">
+      <tr>
+        <td colspan="2"><div align="center">用户注册</div></td>
+      </tr>
+      <tr>
+        <td><div align="right">用户名：</div></td>
+        <td><label for="username"></label>
+        <input type="text" name="username" id="username" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">密 码：</div></td>
+        <td><label for="password"></label>
+        <input type="password" name="password" id="password" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">重复密码：</div></td>
+        <td><input type="password" name="password2" id="password2" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">邮 箱：</div></td>
+        <td><label for="email"></label>
+        <input type="text" name="email" id="email" /></td>
+      </tr>
+      <tr>
+        <td><div align="center">
+            <input type="submit" name="commit" id="commit" value="提交" onclick = "mycheck()" />
+        </div></td>
+        <td><div align="center">
+          <input type="submit" name="cancel" id="cancel" value="撤销" onclick = "mycheck()" />
+        </div></td>
+      </tr>
+    </table>
+  </div>
+</form>
+</body>
+</html>

@@ -6,16 +6,16 @@ function LoadSceneOne(world, context, canvas, fixDef)
     fixDef1.friction = 0.1;
     fixDef1.restitution =0;
 	fixDef1.shape = new b2PolygonShape;
-	fixDef1.shape.SetAsArray([new b2Vec2(0,0),new b2Vec2(2,0),new b2Vec2(2,1),new b2Vec2(0,1)]);
-	addCubeToWorld(world,9,10 ,'sceneOneLogin', b2Body.b2_staticBody, fixDef1);
+	fixDef1.shape.SetAsArray([new b2Vec2(0,0),new b2Vec2(3,0),new b2Vec2(3,1),new b2Vec2(0,1)]);
+	addCubeToWorld(world,9.2,10.85 ,'sceneOneLogin', b2Body.b2_staticBody, fixDef1);
 	
-	addCubeToWorld(world,15,10 ,'sceneOneRegister', b2Body.b2_staticBody, fixDef1);
+	addCubeToWorld(world,14.3,10.85 ,'sceneOneRegister', b2Body.b2_staticBody, fixDef1);
 	
-	addObjectToWorld(world, 800/30 - 3 ,1, "sceneOneClose", b2Body.b2_staticBody, fixDef);
+	addObjectToWorld(world, 800/30 - 3.5 ,1, "sceneOneClose", b2Body.b2_staticBody, fixDef);
 	
-	addObjectToWorld(world, 2, 480/30 -2, "sceneOneBgMusic", b2Body.b2_staticBody, fixDef);
+	addObjectToWorld(world, 1.25, 480/30 -1.20, "sceneOneBgMusic", b2Body.b2_staticBody, fixDef);
 	
-	addObjectToWorld(world, 800/30 - 2, 480/30 -2, "sceneOneSetup", b2Body.b2_staticBody, fixDef);
+	addObjectToWorld(world, 800/30 - 1.35, 480/30 -1.2, "sceneOneSetup", b2Body.b2_staticBody, fixDef);
 	
 	var fixDef2 = new b2FixtureDef;
 	fixDef2.density = 10.0;
@@ -38,7 +38,7 @@ function LoadSceneThree(world, context, canvas, fixDef)
 	//添加碰撞物体
 		////////////////////////////////////////////////////添加该物体总是不变，只运行一次。
 		{
-			addObjectToWorld(world, 1, 480/30-1,'Return' ,b2Body.b2_staticBody, fixDef); //添加按钮
+			addObjectToWorld(world, 800/30 -2, 480/30-1,'Return' ,b2Body.b2_staticBody, fixDef); //添加按钮
 		}  
 		
 		/////////////////////////////////////////////////////添加物体每次进行测试都要重新绘制的图形
