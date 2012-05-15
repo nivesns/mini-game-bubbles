@@ -7,15 +7,15 @@ function LoadSceneOne(world, context, canvas, fixDef)
     fixDef1.restitution =0;
 	fixDef1.shape = new b2PolygonShape;
 	fixDef1.shape.SetAsArray([new b2Vec2(0,0),new b2Vec2(3,0),new b2Vec2(3,1),new b2Vec2(0,1)]);
-	addCubeToWorld(world,9.2,10.85 ,'sceneOneLogin', b2Body.b2_staticBody, fixDef1);
+	addCubeToWorld(world,9.2,10.95 ,'sceneOneLogin', b2Body.b2_staticBody, fixDef1);
 	
-	addCubeToWorld(world,14.3,10.85 ,'sceneOneRegister', b2Body.b2_staticBody, fixDef1);
+	addCubeToWorld(world,14.3,10.95 ,'sceneOneRegister', b2Body.b2_staticBody, fixDef1);
 	
-	addObjectToWorld(world, 800/30 - 3.5 ,1, "sceneOneClose", b2Body.b2_staticBody, fixDef);
+	addObjectToWorld(world, 800/30 - 3.5 ,0.95, "sceneOneClose", b2Body.b2_staticBody, fixDef);
 	
 	addObjectToWorld(world, 1.25, 480/30 -1.20, "sceneOneBgMusic", b2Body.b2_staticBody, fixDef);
 	
-	addObjectToWorld(world, 800/30 - 1.35, 480/30 -1.2, "sceneOneSetup", b2Body.b2_staticBody, fixDef);
+	addObjectToWorld(world, 800/30 - 1.25, 480/30 -1.1, "sceneOneSetup", b2Body.b2_staticBody, fixDef);
 	
 	var fixDef2 = new b2FixtureDef;
 	fixDef2.density = 10.0;
@@ -52,6 +52,10 @@ function LoadSceneThree(world, context, canvas, fixDef)
 		//	ClickReturnRecover(world, fixDef);	
 		    AddInitBall(world, fixDef);
 		
+		}
+		///////////////////////////////////////////////////////////////////添加Music
+		{
+			addObjectToWorld(world, 1.25, 480/30 -1.20, "ReturnMusic", b2Body.b2_staticBody, fixDef);
 		}
 }
 function DeleteAllObjectInScene(world)

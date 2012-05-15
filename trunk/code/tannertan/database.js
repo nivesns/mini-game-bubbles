@@ -1,3 +1,5 @@
+
+var conn = null;
 function ConnectDatabase()
 {
 	var db_bbs;
@@ -6,20 +8,31 @@ function ConnectDatabase()
 	fileHead = fileHead.substring(0, fileHead.lastIndexOf('/'));
 	
   	db_bbs=fileHead + "/tannertan/database.mdb"//定义数据库
-  	var conn = new ActiveXObject("ADODB.Connection");  
+  	 conn = new ActiveXObject("ADODB.Connection");  
 	conn.Open("Provider=Microsoft.Jet.OLEDB.4.0;Data Source="+db_bbs+"");  
-  	var rs = new ActiveXObject("ADODB.Recordset");  
-  	var sql="select name from [table]"; //数据库中有authors表，name字段
-	
+  	  
+  	
+}
+function LoginClient(id, password)
+{
+	var i = 0;
+	var sql="select score from [table] where "; //数据库中有authors表，name字段
+	sql += "name = " +"\'" +id +"\' and password = \'";
+	sql += password + "\'";
+	var rs = new ActiveXObject("ADODB.Recordset");
 	rs.open(sql,conn);
 	while(!rs.EOF)
 	{
-		alert(rs(0))//取出第一个来z
+		i++;
 		rs.movenext();
 	}
-  	
+  	if(i > 0)
+	{
+		return true;
+	}
+	return false;
 	
 
-	conn.close();   
-  	conn = null;  
+//	conn.close();   
+ // 	conn = null;  
 }
