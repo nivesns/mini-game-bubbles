@@ -6,6 +6,9 @@ var globalAddOneAffect = 0;//表示现在这个加1特效还能持续多久。
 var globalScoreOfPlayOne = 0, globalScoreOfPlayTwo = 0;//表示playOne和playTwo的分数
 var globalTime = 0;//用来记录时间
 var globalAllTime =  60 * 180;//记录总共需要的时间
+var globalSceneThreeMusic = true;
+var globalPlayOneName = "";
+var globalPlayTwoName = "";
 ////////////////////////////////////////////////////////////////////////////判断字符串中是否含有某个子串
 function JudgementSubstring(string ,subString)
 {	
@@ -119,7 +122,12 @@ function DrowWorldEveryObject(world, context, canvas)
 	DrawBody(world, context, canvas);//画建立的有属性的物体
 	
 	
+	context.font ="20pt Script MT";
+	context.fillStyle = "#0000ff";
+	context.fillText(globalPlayOneName,40,70);
 	
+	
+	context.font ="15pt Script MT";
 	if(globalTime > globalAllTime)///////////////////////////分钟
 	{
 		alert("over");
@@ -267,6 +275,19 @@ function DrawBody(world, context, canvas)
 			
 			DrawLayInSecene(context, "images/return.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 30,30);//return 图标
 			
+		}
+		if(allBody.GetUserData() == 'ReturnMusic')
+		{
+			var position = allBody.GetPosition();
+			
+			if(globalSceneThreeMusic)
+			{
+				DrawLayInSecene(context, "SceneOne/music.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 30,30);//return 图标
+			}
+			else
+			{
+				DrawLayInSecene(context, "SceneOne/music off.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 32,30);//return 图标
+			}
 		}
 		if(allBody.GetUserData() == "RollBall_1" || allBody.GetUserData() == "RollBall_2" ||allBody.GetUserData() == "RollBall_3" ||
 		allBody.GetUserData() == "RollBall_4" ||allBody.GetUserData() == "RollBall_5" )
@@ -489,6 +510,51 @@ function MouseMoveRollBall(ev, world, context, canvas, fixDef)
 		
 	}
 }
+////////////////////////////////////////////////////////////////////////////////////////////鼠标处理returnMusic按钮
+
+var clickReturnReturnMusic  = 0;
+var bodyballReturnMusicPosition ;
+function MouseClickDownReturnMusic(ev, world, context, canvas, fixDef)
+{
+	bodyball = getObjectFromWorld(world, 'ReturnMusic');
+	
+	bodyballReturnMusicPosition = bodyball.GetPosition();
+	
+	if( ev.offsetX< (bodyballReturnMusicPosition.x+0.5)*30 && ev.offsetX > (bodyballReturnMusicPosition.x-0.5)*30 &&
+	ev.offsetY < (bodyballReturnMusicPosition.y + 0.5) *30 && ev.offsetY > (bodyballReturnMusicPosition.y-0.5)*30)
+	{
+		clickReturnReturnMusic = 1;
+		
+	}
+}
+function MouseClickUpReturnMusic(ev, world, context, canvas, fixDef)
+{
+	if(clickReturnReturnMusic == 1)
+	{
+	//	ClickReturnRecover(world, fixDef);  //报废，不用了， 现在的返回消息没有了
+	//	ConnectDatabase();
+		globalSceneThreeMusic = !globalSceneThreeMusic;
+		if(globalSceneThreeMusic)
+		{
+			playMusic();
+		}
+		else
+		{
+			pauseMusic();
+		}
+	}
+}
+function MouseMoveReturnMusic(ev, world, context, canvas , fixDef)
+{
+	if(clickReturnReturnMusic ==  1)
+	{
+		if( !(ev.offsetX< (bodyballReturnMusicPosition.x+0.5)*30 && ev.offsetX > (bodyballReturnMusicPosition.x-0.5)*30 &&
+		ev.offsetY < (bodyballReturnMusicPosition.y + 0.5) *30 && ev.offsetY > (bodyballReturnMusicPosition.y-0.5)*30))
+		{		
+			clickReturnReturnMusic = 0;
+		}
+	}
+}
 ////////////////////////////////////////////////////////////////////////////////////////////鼠标处理return按钮
 var clickReturnReturn  = 0;
 var bodyballReturnPosition ;
@@ -512,6 +578,8 @@ function MouseClickUpReturn(ev, world, context, canvas, fixDef)
 	//	ClickReturnRecover(world, fixDef);  //报废，不用了， 现在的返回消息没有了
 	//	ConnectDatabase();
 		ChangeScene(1, world, context, canvas, fixDef);//点击返回按钮返回到场景一
+		playMusic();
+		globalSceneThreeMusic = true;
 		//重置所有东西
 		globalNumberOfBall_PlayerA = 0;
 		globalTime = 0;
@@ -682,4 +750,8 @@ function AddInitBall(world, fixDef)
 function SetObjectSpeed(object, i)
 {
 	object.SetLinearVelocity(new b2Vec2(0, i/17));
+}
+function GetNameOfPlay(inputStringId)
+{
+	globalPlayOneName = inputStringId;
 }

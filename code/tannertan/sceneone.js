@@ -8,7 +8,8 @@ var countI = 0;//统计帧数;
 var musicBool = true;
 function DrawOneSceneEveryObject(world, context, canvas)
 {
-	DrawBackground(world, context, canvas, "SceneOne/bg.jpg");
+	DrawBackground(world, context, canvas, "SceneOne/start.jpg");
+	
 	logVar = getObjectFromWorld(world, "sceneOneLogin");
 	register = getObjectFromWorld(world, "sceneOneRegister");
 	closeVar = getObjectFromWorld(world, "sceneOneClose");
@@ -17,16 +18,16 @@ function DrawOneSceneEveryObject(world, context, canvas)
 	id = getObjectFromWorld(world,"sceneOneId");	
 	password = getObjectFromWorld(world,"sceneOnePassword");	
 	
-	DrawLayInSecene(context ,"images/water.png", logVar.GetPosition().x*30 ,logVar.GetPosition().y*30,90, 30);
+/*	DrawLayInSecene(context ,"images/water.png", logVar.GetPosition().x*30 ,logVar.GetPosition().y*30,90, 30);
 	DrawLayInSecene(context ,"images/water.png", register.GetPosition().x*30, register.GetPosition().y*30,90, 30);
 	DrawLayInSecene(context ,"images/water.png", closeVar.GetPosition().x*30 - 30/2, closeVar.GetPosition().y*30-30/2,30, 30);
-	DrawLayInSecene(context ,"images/water.png", bgMusic.GetPosition().x*30-30/2, bgMusic.GetPosition().y*30-30/2,30, 30);
+//	DrawLayInSecene(context ,"SceneOne/music.png", bgMusic.GetPosition().x*30-30/2, bgMusic.GetPosition().y*30-30/2,30, 40);
 	DrawLayInSecene(context ,"images/water.png", setUp.GetPosition().x*30-30/2, setUp.GetPosition().y*30-30/2,30, 30);
-//	DrawLayInSecene(context ,"images/water.png", id.GetPosition().x*30, id.GetPosition().y*30,170, 30);
-//	DrawLayInSecene(context ,"images/water.png", password.GetPosition().x*30, password.GetPosition().y*30,170, 30);
+	DrawLayInSecene(context ,"images/water.png", id.GetPosition().x*30, id.GetPosition().y*30,170, 30);
+	DrawLayInSecene(context ,"images/water.png", password.GetPosition().x*30, password.GetPosition().y*30,170, 30);*/
 	if(!musicBool)
 	{
-		DrawLayInSecene(context ,"images/delete.png", bgMusic.GetPosition().x*30-30/2, bgMusic.GetPosition().y*30-30/2,30, 30);
+		DrawLayInSecene(context ,"SceneOne/music off.png", bgMusic.GetPosition().x*30-30/2, bgMusic.GetPosition().y*30-30/2,31, 40);
 	}
 	
 	
@@ -65,8 +66,9 @@ function DrawOneSceneEveryObject(world, context, canvas)
 	}
 	if(whichTable != 1 && whichTable != 2)
 	{
+		var passwordStr = ChangeAlphaToStar(inputStringPassword);
 		context.fillText(inputStringId, id.GetPosition().x*30, id.GetPosition().y*30 + 20);
-		context.fillText(inputStringPassword, password.GetPosition().x*30, password.GetPosition().y*30 + 20);
+		context.fillText(passwordStr, password.GetPosition().x*30, password.GetPosition().y*30 + 20);
 	}
 	
 	
@@ -139,10 +141,21 @@ function SceneOneClickUp(ev, world, context, canvas, fixDef)
 			alert("click another");
 			break;
 			case 1:
-			ChangeScene(3, world, context, canvas, fixDef);
-		//	alert(inputStringId + " " + inputStringPassword);
-			inputStringId = "";
-			inputStringPassword = "";
+			musicBool = true;
+			if(LoginClient(inputStringId, inputStringPassword))
+			{
+				ChangeScene(3, world, context, canvas, fixDef);
+				playMusic();
+				GetNameOfPlay(inputStringId);
+				
+			}
+			else
+			{
+				alert("账号或密码错误!");
+			//	inputStringId = "";
+			//	inputStringPassword = "";
+			}
+			
 			break;
 			case 2:
 			window.open('register.html');

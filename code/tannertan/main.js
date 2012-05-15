@@ -208,6 +208,8 @@ function StartFuction(canvas , context)
 				MouseClickDownRollBall(ev, world, context, canvas, fixDef);	
 			
 				MouseClickDownReturn(ev, world, context, canvas, fixDef);	
+				
+				MouseClickDownReturnMusic(ev, world, context, canvas, fixDef);	
 			}
 			if(currentScene == 2)
 			{
@@ -226,6 +228,8 @@ function StartFuction(canvas , context)
 				MouseClickUpRollBall(ev, world, context, canvas, fixDef);
 			
 				MouseClickUpReturn(ev, world, context, canvas, fixDef);	
+				
+				MouseClickUpReturnMusic(ev, world, context, canvas, fixDef);	
 			}
 			if(currentScene == 2)
 			{
@@ -244,6 +248,8 @@ function StartFuction(canvas , context)
 				MouseMoveRollBall(ev, world, context, canvas, fixDef);
 			
 				MouseMoveReturn(ev, world, context, canvas, fixDef);
+				
+				MouseMoveReturnMusic(ev, world, context, canvas, fixDef);
 			}
 			if(currentScene == 2)
 			{
