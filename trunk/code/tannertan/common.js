@@ -9,6 +9,18 @@ var globalAllTime =  60 * 180;//记录总共需要的时间
 var globalSceneThreeMusic = true;
 var globalPlayOneName = "";
 var globalPlayTwoName = "";
+var globalMusicPlay = true;
+////////////////////////////////////////全局音乐现在的状态
+function GetGlobalMusicState()
+{
+	return globalMusicPlay;
+}
+function SetGlobalMusicState(state)
+{
+	globalMusicPlay = state;
+}
+
+
 ////////////////////////////////////////////////////////////////////////////判断字符串中是否含有某个子串
 function JudgementSubstring(string ,subString)
 {	
@@ -26,21 +38,37 @@ function JudgementSubstring(string ,subString)
 		return false;
 	}
 }
-/////////////////////////////////////////////////////////播放音乐   src表示的是音乐的路径
-var bgmusic ;
-function PlayMusic(src)
+/////////////////////////////////////////////////////////播放背景音乐   src表示的是音乐的路径
+var bgscenethreemusic ;
+function BgMusicSceneThree(src)
 {
-	bgmusic = new Audio(src);
-	playMusic();
+	bgscenethreemusic = new Audio(src);
+	
 }
-function playMusic()
+function PlayBgMusicSceneThree()
 {
-	bgmusic.play();	
+	bgscenethreemusic.play();	
 }
-function pauseMusic()
+function PauseBgMusicSceneThree()
 {
-	bgmusic.pause();
+	bgscenethreemusic.pause();
 }
+////////////////////////////////////////进入一个球的音乐
+var getonescenethreemusic ;
+function GetOneMusicSceneThree(src)
+{
+	getonescenethreemusic = new Audio(src);
+	
+}
+function PlayGetOneMusicSceneThree()
+{
+	getonescenethreemusic.play();	
+}
+function PauseGetOneMusicSceneThree()
+{
+	getonescenethreemusic.pause();
+}
+
 /////////////////////////////////////////////////////////添加物体到世界中去,
 function  addObjectToWorld(world, position_x ,position_y, userdata, type,  fixDef)
 {
@@ -280,7 +308,7 @@ function DrawBody(world, context, canvas)
 		{
 			var position = allBody.GetPosition();
 			
-			if(globalSceneThreeMusic)
+			if(GetGlobalMusicState())
 			{
 				DrawLayInSecene(context, "SceneOne/music.png",(position.x - 0.5)*30, (position.y - 0.5)*30, 30,30);//return 图标
 			}
@@ -533,14 +561,14 @@ function MouseClickUpReturnMusic(ev, world, context, canvas, fixDef)
 	{
 	//	ClickReturnRecover(world, fixDef);  //报废，不用了， 现在的返回消息没有了
 	//	ConnectDatabase();
-		globalSceneThreeMusic = !globalSceneThreeMusic;
-		if(globalSceneThreeMusic)
+		SetGlobalMusicState(!GetGlobalMusicState());
+		if(GetGlobalMusicState())
 		{
-			playMusic();
+			PlayBgMusicSceneThree();
 		}
 		else
 		{
-			pauseMusic();
+			PauseBgMusicSceneThree();
 		}
 	}
 }
@@ -578,7 +606,8 @@ function MouseClickUpReturn(ev, world, context, canvas, fixDef)
 	//	ClickReturnRecover(world, fixDef);  //报废，不用了， 现在的返回消息没有了
 	//	ConnectDatabase();
 		ChangeScene(1, world, context, canvas, fixDef);//点击返回按钮返回到场景一
-		playMusic();
+		PauseSceneThreeMusic();
+		PlaySceneOneMusic();
 		globalSceneThreeMusic = true;
 		//重置所有东西
 		globalNumberOfBall_PlayerA = 0;
@@ -705,7 +734,8 @@ function DeleteActionStaticObject(world, fixDef)
 		//	alert(position.x *30 + " "+ position.y*30);
 			globalAddOneAffect = 60;//定义加1动画的时间
 			globalNumberOfBall_PlayerA = globalNumberOfBall_PlayerA + 1;//表示进球数量增加
-			PlayMusic('musicSrc/gotit.mp3');
+			if(GetGlobalMusicState())
+			PlayGetOneMusicSceneThree();
 			///说明调入了正确的坑内
 		}
 		else

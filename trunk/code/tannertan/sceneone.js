@@ -6,6 +6,23 @@ var inputStringId = "", inputStringPassword = "", cursorStringModelId = "", curs
 var cursorSpeed = 20;//设置光标多久闪一下;
 var countI = 0;//统计帧数;
 var musicBool = true;
+
+
+////////////////////////////////////////场景1中的音乐播放
+var bgsceneonemusic;
+function BgMusicSceneOne(src)
+{
+	bgsceneonemusic = new Audio(src);
+}
+function PlayBgMusicSceneOne()
+{
+	bgsceneonemusic.play();	
+}
+function PauseBgMusicSceneOne()
+{
+	bgsceneonemusic.pause();
+}
+/////////////////////////////////
 function DrawOneSceneEveryObject(world, context, canvas)
 {
 	DrawBackground(world, context, canvas, "SceneOne/start.jpg");
@@ -25,7 +42,7 @@ function DrawOneSceneEveryObject(world, context, canvas)
 	DrawLayInSecene(context ,"images/water.png", setUp.GetPosition().x*30-30/2, setUp.GetPosition().y*30-30/2,30, 30);
 	DrawLayInSecene(context ,"images/water.png", id.GetPosition().x*30, id.GetPosition().y*30,170, 30);
 	DrawLayInSecene(context ,"images/water.png", password.GetPosition().x*30, password.GetPosition().y*30,170, 30);*/
-	if(!musicBool)
+	if(!GetGlobalMusicState())
 	{
 		DrawLayInSecene(context ,"SceneOne/music off.png", bgMusic.GetPosition().x*30-30/2, bgMusic.GetPosition().y*30-30/2,31, 40);
 	}
@@ -138,15 +155,17 @@ function SceneOneClickUp(ev, world, context, canvas, fixDef)
 		switch(mouseClickDown)
 		{
 			case 0:
-			alert("click another");
+		//	alert("click another");
 			break;
 			case 1:
 			musicBool = true;
 			if(LoginClient(inputStringId, inputStringPassword))
 			{
 				ChangeScene(3, world, context, canvas, fixDef);
-				playMusic();
+				
 				GetNameOfPlay(inputStringId);
+				
+				PauseSceneOneMusic();
 				
 			}
 			else
@@ -155,7 +174,6 @@ function SceneOneClickUp(ev, world, context, canvas, fixDef)
 			//	inputStringId = "";
 			//	inputStringPassword = "";
 			}
-			
 			break;
 			case 2:
 			window.open('register.html');
@@ -165,14 +183,15 @@ function SceneOneClickUp(ev, world, context, canvas, fixDef)
 			break;
 			case 4:
 			{
-				musicBool = !musicBool;
-				if(musicBool)
+				
+				SetGlobalMusicState(!GetGlobalMusicState());
+				if(GetGlobalMusicState())
 				{
-					playMusic();
+					PlayBgMusicSceneOne();
 				}
 				else
 				{
-					pauseMusic();
+					PauseBgMusicSceneOne();
 				}
 			}
 			break;
