@@ -1,5 +1,10 @@
 function LoadSceneOne(world, context, canvas, fixDef)
 {
+	if(GetGlobalMusicState())//所有的场景切换音频都是在这个地方就行修改。
+	{
+		PlayBgMusicSceneOne();
+		PauseBgMusicSceneThree();
+	}
 	DeleteAllObjectInScene(world);
 	var fixDef1 = new b2FixtureDef;
     fixDef1.density = 10.0;
@@ -34,8 +39,15 @@ function LoadSceneTwo(world, context, canvas, fixDef)
 }
 function LoadSceneThree(world, context, canvas, fixDef)
 {
-	DeleteAllObjectInScene(world);
+		if(GetGlobalMusicState())
+		{
+			PauseBgMusicSceneOne();
+			PlayBgMusicSceneThree();
+		}
+		DeleteAllObjectInScene(world);
 	//添加碰撞物体
+		////添加背景音乐
+		
 		////////////////////////////////////////////////////添加该物体总是不变，只运行一次。
 		{
 			addObjectToWorld(world, 800/30 -2, 480/30-1,'Return' ,b2Body.b2_staticBody, fixDef); //添加按钮

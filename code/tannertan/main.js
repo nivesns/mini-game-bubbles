@@ -2,7 +2,11 @@ var currentScene = 1;
 
 function StartFuction(canvas , context)
 {
-	PlayMusic('musicSrc/bg.mp3');
+	BgMusicSceneOne('musicSrc/bgSceneOne.mp3');/////播放场景1的背景音乐
+	BgMusicSceneThree('musicSrc/bgSceneThree.mp3');
+	GetOneMusicSceneThree('musicSrc/gotit.mp3');
+	
+	PlayBgMusicSceneOne();
 	
 	var a1 = new Array();
 	a1.push(trackArray[0]);
