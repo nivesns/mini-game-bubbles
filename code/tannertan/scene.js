@@ -1,3 +1,16 @@
+function LoadSceneZero(world, context, canvas, fixDef)
+{
+	DeleteAllObjectInScene(world);
+	var fixDef1 = new b2FixtureDef;
+    fixDef1.density = 10.0;
+    fixDef1.friction = 0.1;
+    fixDef1.restitution =0;
+	fixDef1.shape = new b2PolygonShape;
+	fixDef1.shape.SetAsArray([new b2Vec2(0,0),new b2Vec2(3,0),new b2Vec2(3,1),new b2Vec2(0,1)]);
+	
+	addCubeToWorld(world,9.2,8.5 ,'sceneZeroQuit', b2Body.b2_staticBody, fixDef1);
+	addCubeToWorld(world,16.2,8.5 ,'sceneZeroContinue', b2Body.b2_staticBody, fixDef1);
+}
 function LoadSceneOne(world, context, canvas, fixDef)
 {
 	if(GetGlobalMusicState())//所有的场景切换音频都是在这个地方就行修改。
@@ -33,9 +46,23 @@ function LoadSceneOne(world, context, canvas, fixDef)
 	
 	addCubeToWorld(world,12.1,8.6,'sceneOnePassword', b2Body.b2_staticBody, fixDef2);
 }
-function LoadSceneTwo(world, context, canvas, fixDef)
+function LoadSceneTwo(world, context, canvas, fixDef)//加载场景二
 {
+	DeleteAllObjectInScene(world);//先删除所有场景中的物体 
+	var fixDef1 = new b2FixtureDef;
+    fixDef1.density = 10.0;
+    fixDef1.friction = 0.1;
+    fixDef1.restitution =0;
+	fixDef1.shape = new b2PolygonShape;
+	fixDef1.shape.SetAsArray([new b2Vec2(0,0),new b2Vec2(6,0),new b2Vec2(6,5.4),new b2Vec2(0,5.4)]);
 	
+	addCubeToWorld(world,6.3,5.8 ,'sceneTwoSingle', b2Body.b2_staticBody, fixDef1);//单人模式
+	
+	addCubeToWorld(world,13.3,5.8 ,'sceneTwoDouble', b2Body.b2_staticBody, fixDef1);//双人模式
+	
+	addObjectToWorld(world, 1.25, 480/30 -1.20, "sceneTwoBgMusic", b2Body.b2_staticBody, fixDef);//添加音乐
+	
+	addObjectToWorld(world, 800/30 - 1.25, 480/30 -1.1, "sceneTwoReturn", b2Body.b2_staticBody, fixDef);//添加返回
 }
 function LoadSceneThree(world, context, canvas, fixDef)
 {
@@ -78,7 +105,8 @@ function DeleteAllObjectInScene(world)
 		if(JudgementSubstring(allBodyList.GetUserData(),'accelerate')  ||JudgementSubstring(allBodyList.GetUserData(),'slowDown') ||//场景三的物体
 		JudgementSubstring(allBodyList.GetUserData(),'RollBall')||JudgementSubstring(allBodyList.GetUserData(),'Return')||//场景三的物体
 		JudgementSubstring(allBodyList.GetUserData(),'sceneOne')||//场景一的物体,场景二设置好了的话，还可以添加场景二的物体
-		JudgementSubstring(allBodyList.GetUserData(),'sceneTwo')//后面可能会用，所以现在加上算了
+		JudgementSubstring(allBodyList.GetUserData(),'sceneTwo')||
+		JudgementSubstring(allBodyList.GetUserData(),'sceneZero')//后面可能会用，所以现在加上算了
 		)
 		{
 			var fixList = allBodyList.GetFixtureList();

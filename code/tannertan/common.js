@@ -598,9 +598,11 @@ function MouseClickDownReturn(ev, world, context, canvas, fixDef)
 		clickReturnReturn = 1;
 		
 	}
+	
 }
 function MouseClickUpReturn(ev, world, context, canvas, fixDef)
 {
+	SceneOneInitApha();
 	if(clickReturnReturn == 1)
 	{
 	//	ClickReturnRecover(world, fixDef);  //报废，不用了， 现在的返回消息没有了
@@ -613,7 +615,9 @@ function MouseClickUpReturn(ev, world, context, canvas, fixDef)
 		globalNumberOfBall_PlayerA = 0;
 		globalTime = 0;
 		clickReturnReturn = 0;
+		
 	}
+	
 }
 function MouseMoveReturn(ev, world, context, canvas , fixDef)
 {

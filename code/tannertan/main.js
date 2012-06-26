@@ -151,12 +151,16 @@ function StartFuction(canvas , context)
 		}
 		if(currentScene == 2)
 		{
-				//
+			LoadSceneTwo(world, context, canvas, fixDef);//
 		}
 		if(currentScene == 1)
 		{
 			//
 			LoadSceneOne(world, context, canvas, fixDef);
+		}
+		if(currentScene == 0)
+		{
+			LoadSceneZero(world, context, canvas, fixDef);
 		}
 		
 		
@@ -217,11 +221,15 @@ function StartFuction(canvas , context)
 			}
 			if(currentScene == 2)
 			{
-				//
+				SceneTwoClickDown(ev, world, context, canvas, fixDef);//
 			}
 			if(currentScene == 1)
 			{
 				SceneOneClickDown(ev, world, context, canvas, fixDef);
+			}
+			if(currentScene == 0)
+			{
+				SceneZeroClickDown(ev, world, context, canvas, fixDef)
 			}
 			
 		}
@@ -237,12 +245,16 @@ function StartFuction(canvas , context)
 			}
 			if(currentScene == 2)
 			{
-				//
+				SceneTwoClickUp(ev, world, context, canvas, fixDef);//
 			}
 			if(currentScene == 1)
 			{
 				//
 				SceneOneClickUp(ev, world, context, canvas, fixDef)
+			}
+			if(currentScene == 0)
+			{
+				SceneZeroClickUp(ev, world, context, canvas, fixDef)
 			}
 		}
 		canvas.onmousemove = function(ev)
@@ -257,12 +269,16 @@ function StartFuction(canvas , context)
 			}
 			if(currentScene == 2)
 			{
-				//
+				SceneTwoMove(ev, world, context, canvas, fixDef)//
 			}
 			if(currentScene == 1)
 			{
 				//
-				SceneOneMove(ev, world, context, canvas, fixDef)
+				SceneOneMove(ev, world, context, canvas, fixDef);
+			}
+			if(currentScene == 0)
+			{
+				SceneZeroMove(ev, world, context, canvas, fixDef);
 			}
 		}
 		
@@ -280,7 +296,7 @@ function StartFuction(canvas , context)
 			
 			canvasWidth = parseInt(canvas.width);
     		canvasHeight = parseInt(canvas.height);
-			context.clearRect(0, 0, canvasWidth, canvasHeight);
+	//		context.clearRect(0, 0, canvasWidth, canvasHeight);//刷掉所有的物体显示
 			
 			if(currentScene == 3)
 			{
@@ -297,6 +313,10 @@ function StartFuction(canvas , context)
 				//
 				DrawOneSceneEveryObject(world, context, canvas);
 				
+			}
+			if(currentScene == 0)
+			{
+				DrawZeroSceneEveryObject(world, context, canvas);
 			}
 			
 		}
@@ -315,6 +335,10 @@ function ChangeScene(change, world, context, canvas, fixDef)
 	if(currentScene == 3)
 	{
 		LoadSceneThree(world, context, canvas, fixDef);
+	}
+	if(currentScene == 0)
+	{
+		LoadSceneZero(world, context, canvas, fixDef);
 	}
 	
 }
