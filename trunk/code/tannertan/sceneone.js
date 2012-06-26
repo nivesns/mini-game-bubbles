@@ -161,7 +161,7 @@ function SceneOneClickUp(ev, world, context, canvas, fixDef)
 			musicBool = true;
 			if(LoginClient(inputStringId, inputStringPassword))
 			{
-				ChangeScene(3, world, context, canvas, fixDef);
+				ChangeScene(2, world, context, canvas, fixDef);
 				
 				GetNameOfPlay(inputStringId);
 				
@@ -173,13 +173,15 @@ function SceneOneClickUp(ev, world, context, canvas, fixDef)
 				alert("账号或密码错误!");
 			//	inputStringId = "";
 			//	inputStringPassword = "";
+				SceneOneInitApha();
 			}
 			break;
 			case 2:
 			window.open('register.html');
+			SceneOneInitApha();
 			break;
 			case 3:
-			alert("close");
+				ChangeScene(0, world, context, canvas, fixDef);
 			break;
 			case 4:
 			{
@@ -288,4 +290,10 @@ function ChangeAlphaToStar(str)
 		i++;
 	}
 	return middleStr;
+}
+////////////////////////////////////////////////////////////将所有的字符串都设置为NULL
+function SceneOneInitApha()
+{
+	inputStringPassword = "";
+	cursorStringModelPassword = "";//记录现在的字符串
 }
