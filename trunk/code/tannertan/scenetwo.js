@@ -59,12 +59,16 @@ function SceneTwoClickUp(ev, world, context, canvas, fixDef)
 	clickUp = ScenceTwoGetObjectFormMouse(ev, world, context, canvas, fixDef);
 	if(clickDown == clickUp && clickDown != -1)
 	{
-		alert(clickUp);
+	//	alert(clickUp);
 		switch(clickUp)
 		{
-			case 1://single
+			case 1://double
+				ChangeScene(3, world, context, canvas, fixDef);	
+				SceneThreeDouble();
 			break;
-			case 2://double
+			case 2://single
+				ChangeScene(3, world, context, canvas, fixDef);	
+				SceneThreeSingle();
 			break;
 			case 3:
 				SetGlobalMusicState(!GetGlobalMusicState());////声音

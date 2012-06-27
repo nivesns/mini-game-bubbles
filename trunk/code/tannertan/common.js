@@ -10,6 +10,7 @@ var globalSceneThreeMusic = true;
 var globalPlayOneName = "";
 var globalPlayTwoName = "";
 var globalMusicPlay = true;
+var SceneThreeSingleVar = 0, SceneThreeDoubleVar = 0;//表示选择的是单人模式还是双人模式
 ////////////////////////////////////////全局音乐现在的状态
 function GetGlobalMusicState()
 {
@@ -210,11 +211,24 @@ function DrawGround(world ,context, canvas)
 }
 
 ///////////////////////////////////////////////////绘制角色
+
+function SceneThreeSingle()
+{
+	SceneThreeSingleVar = 1;
+	SceneThreeDoubleVar = 0;
+}
+
+function SceneThreeDouble()
+{
+	SceneThreeSingleVar = 0;
+	SceneThreeDoubleVar = 1;
+}
 function DrawRole(world, context, canvas)
 {
 	DrawLayInSecene(context, "images/playOne.png", 0, 0, 160,70);//playOne
-			
-	DrawLayInSecene(context, "images/playTwo.png", 640, 0, 160,70);//playTwo
+	
+	if(	SceneThreeDoubleVar == 1)	
+		DrawLayInSecene(context, "images/playTwo.png", 640, 0, 160,70);//playTwo
 }
 
 ///////////////////////////////////////////////////绘制分数
@@ -247,7 +261,8 @@ function DrawScore(world, context, canvas)
 	var middleTwoScore = globalScoreOfPlayTwo;
 	
 	HandleScore(context, playOnePositionBegin, playOneSize, middleOneScore);
-	HandleScore(context, playTwoPositionBegin, playTwoSize, middleTwoScore);	
+	if(	SceneThreeDoubleVar == 1)	
+		HandleScore(context, playTwoPositionBegin, playTwoSize, middleTwoScore);	
 }
 /////////////////////////////////////////////////////根据时间来绘制球的颜色
 function DrawBallColor(context, position)
