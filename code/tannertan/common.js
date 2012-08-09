@@ -5,7 +5,7 @@ var globalCanChange = false;///现在是否可以颜色渐变b
 var globalAddOneAffect = 0;//表示现在这个加1特效还能持续多久。
 var globalScoreOfPlayOne = 0, globalScoreOfPlayTwo = 0;//表示playOne和playTwo的分数
 var globalTime = 0;//用来记录时间
-var globalAllTime =  60 * 180;//记录总共需要的时间
+var globalAllTime =  60 * 45;//记录总共需要的时间
 var globalSceneThreeMusic = true;
 var globalPlayOneName = "";
 var globalPlayTwoName = "";
