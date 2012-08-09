@@ -1,4 +1,4 @@
-var globalAccountOfBall =1;///共需要运输的球的个数
+var globalAccountOfBall =5;///共需要运输的球的个数
 var globalNumberOfBall_PlayerA = 0;//目前进了几个球playOne;
 var globalColorFrame = 0;//表示颜色变化的帧是多少
 var globalCanChange = false;///现在是否可以颜色渐变b
