@@ -1,4 +1,4 @@
-var globalAccountOfBall = 6;///共需要运输的球的个数
+var globalAccountOfBall =1;///共需要运输的球的个数
 var globalNumberOfBall_PlayerA = 0;//目前进了几个球playOne;
 var globalColorFrame = 0;//表示颜色变化的帧是多少
 var globalCanChange = false;///现在是否可以颜色渐变b
@@ -12,6 +12,42 @@ var globalPlayTwoName = "";
 var globalMusicPlay = true;
 var SceneThreeSingleVar = 0, SceneThreeDoubleVar = 0;//表示选择的是单人模式还是双人模式
 ////////////////////////////////////////全局音乐现在的状态
+function RemainTime()
+{
+	threeAccountOfBall=globalAccountOfBall;	
+	threeNumberOfBall_PlayerA=globalNumberOfBall_PlayerA;
+	threeColorFrame=globalColorFrame;
+	threeCanChange=globalCanChange;
+	threeAddOneAffect=globalAddOneAffect;
+	threeScoreOfPlayOne=globalScoreOfPlayOne;
+	threeScoreOfPlayTwo=globalScoreOfPlayTwo;
+	threeTime=globalTime;
+	threeAllTime=globalAllTime;
+	threeSceneThreeMusic=globalSceneThreeMusic;
+	threePlayOneName=globalPlayOneName;
+	threePlayTwoName=globalPlayTwoName;
+	threeMusicPlay=globalMusicPlay;
+	threeSceneThreeSingleVar=SceneThreeSingleVar;
+	threeSceneThreeDoubleVar=SceneThreeDoubleVar;
+}
+function RecoverTime()
+{
+	globalAccountOfBall=threeAccountOfBall;
+	globalNumberOfBall_PlayerA=threeNumberOfBall_PlayerA;
+	globalColorFrame=threeColorFrame;
+	globalCanChange=threeCanChange;
+	globalAddOneAffect=threeAddOneAffect;
+	globalScoreOfPlayOne=threeScoreOfPlayOne;
+	globalScoreOfPlayTwo=threeScoreOfPlayTwo;
+	globalTime=threeTime;
+	globalAllTime=threeAllTime;
+	globalSceneThreeMusic=threeSceneThreeMusic;
+	globalPlayOneName=threePlayOneName;
+	globalPlayTwoName=threePlayTwoName;
+	globalMusicPlay=threeMusicPlay;
+	SceneThreeSingleVar=1;
+	SceneThreeDoubleVar=0;
+}
 function GetGlobalMusicState()
 {
 	return globalMusicPlay;
@@ -21,6 +57,17 @@ function SetGlobalMusicState(state)
 	globalMusicPlay = state;
 }
 
+////////////////////////初始化3
+function InitSceneThree()
+{
+	globalNumberOfBall_PlayerA = 0;
+	globalTime = 0;
+	
+		//重置所有东西
+	flag = 1;
+	globalAddOneAffect = 0;
+	clickReturnReturn = 0;
+}
 
 ////////////////////////////////////////////////////////////////////////////判断字符串中是否含有某个子串
 function JudgementSubstring(string ,subString)
@@ -154,17 +201,76 @@ function DrowWorldEveryObject(world, context, canvas)
 	context.font ="20pt Script MT";
 	context.fillStyle = "#0000ff";
 	context.fillText(globalPlayOneName,40,70);
+	if(SceneThreeDoubleVar == 1)
+		context.fillText(globalPlayTwoName,700,75);
 	
 	
 	context.font ="15pt Script MT";
 	if(globalTime > globalAllTime)///////////////////////////分钟
 	{
-		alert("over");
+		winOrlost = 0;
+		var fixDef = new b2FixtureDef;
+        	 fixDef.density = 1.0;
+         	fixDef.friction = 0.5;
+        	 fixDef.restitution = 0.2;
+
+     //    fixDef.shape = new b2PolygonShape;
+    //     fixDef.shape.SetAsBox(1, 1);
+		 	fixDef.shape = new b2CircleShape(0.5);
+			flag --;
+		//	alert("cheer up");
+		  //  SetWinOrLost(1);
+			ChangeScene(4, world, context, canvas, fixDef);
+		
 	}
 	DrawTime(world, context, canvas);
 	globalTime = globalTime + 1;
+	
+	if(SceneThreeDoubleVar == 1)
+	{
+		SynchronizationGame(world, context, canvas);
+		
+	}
+	
 }
+///////////////////////////////////////////////////////////////处理同步
+var allTimeOut = 0;
+function SynchronizationGame(world, context, canvas)
+{
+	
+	allTimeOut = allTimeOut +1;
+	if(allTimeOut >=240)
+	{
+		if(allTimeOut >= 240)
+		 	allTimeOut = 0;
+		
+		
+		
+		var allData = (GetOtherStation(globalPlayOneName, globalPlayTwoName));
+		var getdata = eval("(" + allData + ")");
+	//	alert(getdata.name + "   "+ getdata.score + "    "+ getdata.online);
+		
+		if(getdata.online <= 0)
+		{
+			/////////////////
+		//	alert("error");////////////////////////有错误在某个地方。
+			RemainTime();
+		//	alert("error");
+			var fixDef = new b2FixtureDef;
+        	 fixDef.density = 1.0;
+         	fixDef.friction = 0.5;
+        	 fixDef.restitution = 0.2;
 
+     //    fixDef.shape = new b2PolygonShape;
+    //     fixDef.shape.SetAsBox(1, 1);
+		 	fixDef.shape = new b2CircleShape(0.5);
+			ChangeScene(5, world, context, canvas, fixDef);
+			
+			
+		}
+	}
+	
+}
 ///////////////////////////////////////////////////////绘制时间
 function DrawTime(world, context, canvas)
 {
@@ -294,6 +400,7 @@ function DrawHelpTool(context , object)
 	}
 } 
 ///////////////////////////////////////////////////////////绘制Body样的东西
+var flag = 1;
 function DrawBody(world, context, canvas)
 {
 	var allBody = world.GetBodyList();
@@ -352,14 +459,33 @@ function DrawBody(world, context, canvas)
 		if(globalNumberOfBall_PlayerA >= globalAccountOfBall)
 		{
 			//////进入下一关。
-		//	alert("可以进入下一关了");
-			alert("congratulate you finsih");
+		//	alert("可以进入下一关了");//完成
+	//		RecordScore(globalPlayOneName, globalTime/60);
+			winOrlost = 1;
+			if(flag >0 )
+			{
+		//	alert("congratulate you finsih");
+			 var fixDef = new b2FixtureDef;
+        	 fixDef.density = 1.0;
+         	fixDef.friction = 0.5;
+        	 fixDef.restitution = 0.2;
+
+     //    fixDef.shape = new b2PolygonShape;
+    //     fixDef.shape.SetAsBox(1, 1);
+		 	fixDef.shape = new b2CircleShape(0.5);
+			flag --;
+		//	alert("cheer up");
+		    RecordScore(globalPlayOneName, Math.round((globalAllTime-globalTime)/60));
+		//	alert(Math.round((globalAllTime-globalTime)/60));
+			ChangeScene(4, world, context, canvas, fixDef);
+			return;
+			}
 		}
 		var path = "number/"+globalNumberOfBall_PlayerA + ".png";//显式以完成几个球
 		DrawLayInSecene(context, path,6*30 ,0.7*30 , 20,30)
 	}
 	{
-		for(var i = 0 ; i < globalAccountOfBall -1 - globalNumberOfBall_PlayerA;i++)
+		for(var i = 0 ; i < globalAccountOfBall  - globalNumberOfBall_PlayerA;i++)
 		{
 			DrawLayInSecene(context, "images/ball.png",(i+6) *35, 20, 30,30);//还剩下几个球没完成
 		}
@@ -622,7 +748,7 @@ function MouseClickUpReturn(ev, world, context, canvas, fixDef)
 	{
 	//	ClickReturnRecover(world, fixDef);  //报废，不用了， 现在的返回消息没有了
 	//	ConnectDatabase();
-		ChangeScene(1, world, context, canvas, fixDef);//点击返回按钮返回到场景一
+		ChangeScene(2, world, context, canvas, fixDef);//点击返回按钮返回到场景一
 		PauseSceneThreeMusic();
 		PlaySceneOneMusic();
 		globalSceneThreeMusic = true;
@@ -800,7 +926,21 @@ function SetObjectSpeed(object, i)
 {
 	object.SetLinearVelocity(new b2Vec2(0, i/17));
 }
-function GetNameOfPlay(inputStringId)
+function GetNameOfPlay(inputStringId, ScoreOne)
 {
 	globalPlayOneName = inputStringId;
+	globalScoreOfPlayOne = ScoreOne;
+}
+function GetUserName()
+{
+	return globalPlayOneName;
+}
+function SetUserTwoNameAndScore(id , score)
+{
+	globalPlayTwoName = id;
+	globalScoreOfPlayTwo = score;
+}
+function GetVSUserName()
+{
+	return globalPlayTwoName;
 }

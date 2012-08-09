@@ -159,11 +159,15 @@ function SceneOneClickUp(ev, world, context, canvas, fixDef)
 			break;
 			case 1:
 			musicBool = true;
-			if(LoginClient(inputStringId, inputStringPassword))
+			
+			if((GetData =LoginClient(inputStringId, inputStringPassword) )!= -1)
 			{
 				ChangeScene(2, world, context, canvas, fixDef);
 				
-				GetNameOfPlay(inputStringId);
+				var record = eval("(" + GetData + ")");
+				
+
+				GetNameOfPlay(inputStringId, record.score );
 				
 				PauseSceneOneMusic();
 				
@@ -177,8 +181,54 @@ function SceneOneClickUp(ev, world, context, canvas, fixDef)
 			}
 			break;
 			case 2:
-			window.open('register.html');
+			window.open('http://mini.zat.cc/new.php');
 			SceneOneInitApha();
+		//	ChangeScene(5, world, context, canvas, fixDef);
+		//	ChangeScene(5, world, context, canvas, fixDef);
+	
+	
+/*	var xmlhttp;
+	if (window.XMLHttpRequest)
+ 	{// code for IE7+, Firefox, Chrome, Opera, Safari
+ 		 xmlhttp=new XMLHttpRequest();
+	}
+	else
+ 	 {// code for IE6, IE5
+ 		 xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+  	url="http://mini.zat.cc/SendRequestForTwoModel.php?name=nor";//nor newh
+	xmlhttp.open("GET",url,false);
+	xmlhttp.send();
+	alert( xmlhttp.responseText);;*/
+/*	var xmlhttp;
+	if (window.XMLHttpRequest)
+ 	{// code for IE7+, Firefox, Chrome, Opera, Safari
+ 		 xmlhttp=new XMLHttpRequest();
+	}
+	else
+ 	 {// code for IE6, IE5
+ 		 xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+  	url="http://mini.zat.cc/GetOtherStation.php?name=nor&vs=but&ver="+Math.random();//nor newh
+	xmlhttp.open("GET",url,false);
+	xmlhttp.send();
+	alert( xmlhttp.responseText);*/
+//	GetOtherStation("but", "nor");
+	
+/*	var xmlhttp;
+	if (window.XMLHttpRequest)
+ 	{// code for IE7+, Firefox, Chrome, Opera, Safari
+ 		 xmlhttp=new XMLHttpRequest();
+	}
+	else
+ 	 {// code for IE6, IE5
+ 		 xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+  	url="http://mini.zat.cc/RecordScore.php?name=nor&score=125";//nor newh
+	xmlhttp.open("GET",url,false);
+	xmlhttp.send();
+	alert( xmlhttp.responseText);*/
+			
 			break;
 			case 3:
 				ChangeScene(0, world, context, canvas, fixDef);
