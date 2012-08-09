@@ -48,6 +48,11 @@ function LoadSceneOne(world, context, canvas, fixDef)
 }
 function LoadSceneTwo(world, context, canvas, fixDef)//加载场景二
 {
+	if(GetGlobalMusicState())//所有的场景切换音频都是在这个地方就行修改。
+	{
+		PlayBgMusicSceneOne();
+		PauseBgMusicSceneThree();
+	}
 	DeleteAllObjectInScene(world);//先删除所有场景中的物体 
 	var fixDef1 = new b2FixtureDef;
     fixDef1.density = 10.0;
@@ -64,6 +69,29 @@ function LoadSceneTwo(world, context, canvas, fixDef)//加载场景二
 	
 	addObjectToWorld(world, 800/30 - 1.25, 480/30 -1.1, "sceneTwoReturn", b2Body.b2_staticBody, fixDef);//添加返回
 }
+function LoadSceneFive(world, context, canvas, fixDef)//加载场景二
+{
+	if(GetGlobalMusicState())//所有的场景切换音频都是在这个地方就行修改。
+	{
+		PlayBgMusicSceneOne();
+		PauseBgMusicSceneThree();
+	}
+	DeleteAllObjectInScene(world);//先删除所有场景中的物体 
+	var fixDef1 = new b2FixtureDef;
+    fixDef1.density = 10.0;
+    fixDef1.friction = 0.1;
+    fixDef1.restitution =0;
+	fixDef1.shape = new b2PolygonShape;
+	fixDef1.shape.SetAsArray([new b2Vec2(0,0),new b2Vec2(3,0),new b2Vec2(3,1),new b2Vec2(0,1)]);
+	
+	addCubeToWorld(world,7,8.5 ,'sceneFiveSingle', b2Body.b2_staticBody, fixDef1);//单人模式
+	
+	addCubeToWorld(world,16,8.5 ,'sceneFiveDouble', b2Body.b2_staticBody, fixDef1);//双人模式
+	
+	addObjectToWorld(world, 1.25, 480/30 -1.20, "sceneFiveBgMusic", b2Body.b2_staticBody, fixDef);//添加音乐
+	
+	addObjectToWorld(world, 800/30 - 1.25, 480/30 -1.1, "sceneFiveReturn", b2Body.b2_staticBody, fixDef);//添加返回
+}
 function LoadSceneThree(world, context, canvas, fixDef)
 {
 		if(GetGlobalMusicState())
@@ -71,10 +99,14 @@ function LoadSceneThree(world, context, canvas, fixDef)
 			PauseBgMusicSceneOne();
 			PlayBgMusicSceneThree();
 		}
+		
+		
 		DeleteAllObjectInScene(world);
 	//添加碰撞物体
 		////添加背景音乐
-		
+		{
+			InitSceneThree();
+		}
 		////////////////////////////////////////////////////添加该物体总是不变，只运行一次。
 		{
 			addObjectToWorld(world, 800/30 -2, 480/30-1,'Return' ,b2Body.b2_staticBody, fixDef); //添加按钮
@@ -97,6 +129,29 @@ function LoadSceneThree(world, context, canvas, fixDef)
 			addObjectToWorld(world, 1.25, 480/30 -1.20, "ReturnMusic", b2Body.b2_staticBody, fixDef);
 		}
 }
+function LoadSceneFour(world, context, canvas, fixDef)//加载场景二
+{
+	if(GetGlobalMusicState())//所有的场景切换音频都是在这个地方就行修改。
+	{
+		PlayBgMusicSceneOne();
+		PauseBgMusicSceneThree();
+	}
+	DeleteAllObjectInScene(world);//先删除所有场景中的物体 
+	var fixDef1 = new b2FixtureDef;
+    fixDef1.density = 10.0;
+    fixDef1.friction = 0.1;
+    fixDef1.restitution =0;
+	fixDef1.shape = new b2PolygonShape;
+	fixDef1.shape.SetAsArray([new b2Vec2(0,0),new b2Vec2(3,0),new b2Vec2(3,1),new b2Vec2(0,1)]);
+	
+	addCubeToWorld(world,8.5,10.5 ,'sceneFourSingle', b2Body.b2_staticBody, fixDef1);//单人模式
+	
+	addCubeToWorld(world,15,10.5 ,'sceneFourDouble', b2Body.b2_staticBody, fixDef1);//双人模式
+	
+	addObjectToWorld(world, 1.25, 480/30 -1.20, "sceneFourBgMusic", b2Body.b2_staticBody, fixDef);//添加音乐
+	
+	addObjectToWorld(world, 800/30 - 1.25, 480/30 -1.1, "sceneFourReturn", b2Body.b2_staticBody, fixDef);//添加返回
+}
 function DeleteAllObjectInScene(world)
 {
 	var allBodyList = world.GetBodyList();
@@ -106,7 +161,9 @@ function DeleteAllObjectInScene(world)
 		JudgementSubstring(allBodyList.GetUserData(),'RollBall')||JudgementSubstring(allBodyList.GetUserData(),'Return')||//场景三的物体
 		JudgementSubstring(allBodyList.GetUserData(),'sceneOne')||//场景一的物体,场景二设置好了的话，还可以添加场景二的物体
 		JudgementSubstring(allBodyList.GetUserData(),'sceneTwo')||
-		JudgementSubstring(allBodyList.GetUserData(),'sceneZero')//后面可能会用，所以现在加上算了
+		JudgementSubstring(allBodyList.GetUserData(),'sceneZero')||//后面可能会用，所以现在加上算了
+		JudgementSubstring(allBodyList.GetUserData(),'sceneFour')||
+		JudgementSubstring(allBodyList.GetUserData(),'sceneFive')
 		)
 		{
 			var fixList = allBodyList.GetFixtureList();

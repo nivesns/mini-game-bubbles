@@ -162,7 +162,14 @@ function StartFuction(canvas , context)
 		{
 			LoadSceneZero(world, context, canvas, fixDef);
 		}
-		
+		if(currentScene == 4)
+		{
+			LoadSceneFour(world, context, canvas, fixDef);
+		}
+		if(currentScene == 5)
+		{
+			LoadSceneFive(world, context, canvas, fixDef);//
+		}
 		
 		////////////////////////////////////////////////////添加四周的围墙，以致求不会掉出该场景
 		{
@@ -223,6 +230,14 @@ function StartFuction(canvas , context)
 			{
 				SceneTwoClickDown(ev, world, context, canvas, fixDef);//
 			}
+			if(currentScene == 4)
+			{
+				SceneFourClickDown(ev, world, context, canvas, fixDef);//
+			}
+			if(currentScene == 5)
+			{
+				SceneFiveClickDown(ev, world, context, canvas, fixDef);//
+			}
 			if(currentScene == 1)
 			{
 				SceneOneClickDown(ev, world, context, canvas, fixDef);
@@ -247,6 +262,14 @@ function StartFuction(canvas , context)
 			{
 				SceneTwoClickUp(ev, world, context, canvas, fixDef);//
 			}
+			if(currentScene == 5)
+			{
+				SceneFiveClickUp(ev, world, context, canvas, fixDef);//
+			}
+			if(currentScene == 4)
+			{
+				SceneFourClickUp(ev, world, context, canvas, fixDef);//
+			}
 			if(currentScene == 1)
 			{
 				//
@@ -270,6 +293,14 @@ function StartFuction(canvas , context)
 			if(currentScene == 2)
 			{
 				SceneTwoMove(ev, world, context, canvas, fixDef)//
+			}
+			if(currentScene == 5)
+			{
+				SceneFiveMove(ev, world, context, canvas, fixDef)//
+			}
+			if(currentScene == 4)
+			{
+				SceneFourMove(ev, world, context, canvas, fixDef)//
 			}
 			if(currentScene == 1)
 			{
@@ -308,6 +339,16 @@ function StartFuction(canvas , context)
 				//
 				DrawTwoSceneEveryObject(world, context, canvas);
 			}
+			if(currentScene == 5)
+			{
+				//
+				DrawFiveSceneEveryObject(world, context, canvas);
+			}
+			if(currentScene == 4)
+			{
+				//
+				DrawFourSceneEveryObject(world, context, canvas);
+			}
 			if(currentScene == 1)
 			{
 				//
@@ -331,6 +372,14 @@ function ChangeScene(change, world, context, canvas, fixDef)
 	if(currentScene == 2)
 	{
 		LoadSceneTwo(world, context, canvas, fixDef);
+	}
+	if(currentScene == 5)
+	{
+		LoadSceneFive(world, context, canvas, fixDef);
+	}
+	if(currentScene == 4)
+	{
+		LoadSceneFour(world, context, canvas, fixDef);
 	}
 	if(currentScene == 3)
 	{

@@ -1,4 +1,7 @@
-//////////////////////////////////////////////////////////////////////绘制场景中的东西
+GetOtherStation(username, VsName)//////////////////////////////////////////////////////////////////////绘制场景中的东西
+//添加一个变量用来检测是否由用户存在
+/////////////////////////////////////////////////////////
+
 function DrawTwoSceneEveryObject(world, context, canvas)
 {
 	
@@ -28,12 +31,12 @@ function ScenceTwoGetObjectFormMouse(ev, world, context, canvas, fixDef)
 		singleVar = getObjectFromWorld(world,"sceneTwoSingle");	
 		doubleVar = getObjectFromWorld(world,"sceneTwoDouble");	
 	}
-	if(	ev.offsetX > singleVar.GetPosition().x*30 && ev.offsetX < singleVar.GetPosition().x*30 + 6*30 &&//login
+	if(	ev.offsetX > singleVar.GetPosition().x*30 && ev.offsetX < singleVar.GetPosition().x*30 + 6*30 &&//singlelogin
 	ev.offsetY > singleVar.GetPosition().y*30 && ev.offsetY < singleVar.GetPosition().y*30  + 5.4*30)
 	{
 		return 1;
 	}
-	if(	ev.offsetX > doubleVar.GetPosition().x*30 && ev.offsetX < doubleVar.GetPosition().x*30 + 6*30 &&//login
+	if(	ev.offsetX > doubleVar.GetPosition().x*30 && ev.offsetX < doubleVar.GetPosition().x*30 + 6*30 &&//doublelogin
 	ev.offsetY > doubleVar.GetPosition().y*30 && ev.offsetY < doubleVar.GetPosition().y*30  + 30*5.4)
 	{
 		return 2;
@@ -63,8 +66,33 @@ function SceneTwoClickUp(ev, world, context, canvas, fixDef)
 		switch(clickUp)
 		{
 			case 1://double
-				ChangeScene(3, world, context, canvas, fixDef);	
 				SceneThreeDouble();
+				//等待第二个用户登录
+				var currentUserName = GetUserName();
+			//	SendRequestForTwoModel(GetUserName());
+				var flag = 2;
+				var getdata = "" ;
+				var name , score;
+				while(getdata == "")
+				{
+					getdata = SendRequestForTwoModel(currentUserName);
+					getdata =  eval("(" + getdata + ")");
+					name = getdata.name;
+					score = getdata.score;
+					getdata = getdata.name;
+					
+					
+					if(flag == 1&& getdata == "" )
+					 	alert("please wait on matching");
+					flag --;
+				}
+				
+				
+				SetUserTwoNameAndScore(name, score);
+				
+				
+				ChangeScene(3, world, context, canvas, fixDef);	
+				
 			break;
 			case 2://single
 				ChangeScene(3, world, context, canvas, fixDef);	
